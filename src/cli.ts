@@ -1,6 +1,7 @@
 import path from 'node:path';
 import { initialize } from './vault.js';
 import { createServer } from './server.js';
+import { validateNetworkOptions } from './server-config.js';
 import { startBridge } from './bridge.js';
 import { startMock } from './mock.js';
 import { markSyntheticProduct, readProductConfig } from './product-config.js';
@@ -34,7 +35,7 @@ async function main() {
   process.umask(0o077);
   const [command, ...args] = process.argv.slice(2);
   const permitted: Record<string, string[]> = {
-    init: ['--data-dir', '--synthetic'], serve: ['--data-dir', '--port', '--product-config'], bridge: ['--origin', '--credential-file'], mock: [],
+    init: ['--data-dir', '--synthetic'], serve: ['--data-dir', '--port', '--product-config', '--public-origin', '--allowed-origin', '--bind-host', '--diagnose-proxy-headers', '--trusted-proxy'], bridge: ['--origin', '--credential-file'], mock: [],
   };
   if (!command || !permitted[command]) throw new Error('Usage: cli.js init|serve|bridge|mock [options]');
   const options = new Map<string, string>();
@@ -58,9 +59,17 @@ async function main() {
     const portText = options.get('--port') ?? '43120';
     if (!/^\d+$/.test(portText) || +portText < 1 || +portText > 65535) throw new Error('Invalid port');
     const configFile = options.get('--product-config');
+    const diagnostic = options.get('--diagnose-proxy-headers');
+    if (diagnostic !== undefined && diagnostic !== 'true' && diagnostic !== 'false') throw new Error('Invalid proxy diagnostic option');
+    const trustedProxy = options.get('--trusted-proxy');
+    if (trustedProxy !== undefined && trustedProxy !== 'loopback') throw new Error('Invalid trusted proxy option');
+    const network = validateNetworkOptions({ trustedProxy, publicOrigin: options.get('--public-origin'), allowedOrigin: options.get('--allowed-origin'), bindHost: options.get('--bind-host'), diagnoseProxyHeaders: diagnostic === 'true' });
     const productConfig = configFile ? readProductConfig(path.resolve(configFile), directory) : undefined;
-    const { app, origin } = await createServer(directory, +portText, { productConfig });
-    process.stdout.write(`Vault listening at ${origin} (locked)\n`);
+    const { app, origin, listeningOrigin, executionOrigin } = await createServer(directory, +portText, { productConfig, ...network });
+    process.stdout.write(`Vault listening at ${listeningOrigin} (locked)\n`);
+    if (origin !== listeningOrigin) process.stdout.write(`Management UI: ${origin}\nLocal execution: ${executionOrigin}\n`);
+    if (network.trustedProxy) process.stderr.write('Trusted loopback proxy: a loopback peer does not prove gateway provenance. Restrict the upstream and require the gateway to overwrite/strip forwarded headers; headers are not authentication.\n');
+    if (network.bindHost !== '127.0.0.1') process.stderr.write('Nonloopback upstream: firewall to the TLS proxy only; do not expose this HTTP socket publicly.\n');
     for (const signal of ['SIGINT', 'SIGTERM'] as const) process.once(signal, () => {
       void app.close().then(() => process.exit(0), () => process.exit(1));
     });

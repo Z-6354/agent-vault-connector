@@ -11,10 +11,12 @@ import { BrowserHostError } from './browser.js';
 import { createOAuthProduct, createSyntheticOAuthProduct } from './oauth-product.js';
 import { OAuthError, type OAuthBinding, type OAuthProvider } from './oauth.js';
 import { assertProductMode, type ProductConfig } from './product-config.js';
+import { requestHostAllowed, validateNetworkOptions, type NetworkOptions } from './server-config.js';
+import { proxyHeaderDiagnostic } from './proxy-diagnostic.js';
 
 interface Session { id: string; csrf: string; expires: number; authenticated: boolean; epoch: number }
 interface PendingConfirmation { session_id: string; card: DraftCard; request_id: string; result?: Metadata }
-export interface ServerOptions { clock?: () => number; vaultOptions?: VaultOptions; productConfig?: ProductConfig }
+export interface ServerOptions extends NetworkOptions { clock?: () => number; vaultOptions?: VaultOptions; productConfig?: ProductConfig }
 const SESSION_MS = 15 * 60_000;
 const random = () => randomBytes(32).toString('hex');
 const equal = (a: string, b: string) => Buffer.byteLength(a) === Buffer.byteLength(b) && timingSafeEqual(Buffer.from(a), Buffer.from(b));
@@ -29,6 +31,8 @@ function parse<T>(schema: z.ZodType<T>, value: unknown): T {
 }
 
 export async function createServer(directory: string, port: number, options: ServerOptions = {}) {
+  const network = validateNetworkOptions(options);
+  if (!Number.isInteger(port) || port < 0 || port > 65535) throw new Error('Invalid port');
   assertProductMode(directory, options.productConfig);
   const clock = options.clock ?? Date.now;
   const vault = new Vault(directory, { ...options.vaultOptions, clock: options.vaultOptions?.clock ?? clock });
@@ -39,10 +43,13 @@ export async function createServer(directory: string, port: number, options: Ser
   const counters = new Map<string, { count: number; until: number }>();
   let adminId: string | undefined;
   let authenticating = false;
-  const origin = () => {
+  const socketPort = () => {
     const address = app.server.address();
-    return `http://127.0.0.1:${typeof address === 'object' && address ? address.port : port}`;
+    return typeof address === 'object' && address ? address.port : port;
   };
+  const executionOrigin = () => `http://127.0.0.1:${socketPort()}`;
+  const origin = () => network.publicOrigin ?? executionOrigin();
+  const cookieOptions = { path: '/', httpOnly: true, sameSite: 'strict' as const, secure: network.secureCookies };
   const take = (key: string, max: number, interval: number) => {
     const now = clock();
     let entry = counters.get(key);
@@ -71,8 +78,7 @@ export async function createServer(directory: string, port: number, options: Ser
     const session: Session = { id, csrf: random(), expires: clock() + SESSION_MS, authenticated, epoch: vault.epoch };
     sessions.set(id, session);
     if (authenticated) adminId = id;
-    // This server binds exact loopback HTTP only. HTTPS deployments must add Secure at their authenticated transport boundary.
-    reply.setCookie('vault_session', id, { path: '/', httpOnly: true, sameSite: 'strict', maxAge: SESSION_MS / 1000 });
+    reply.setCookie('vault_session', id, { ...cookieOptions, maxAge: SESSION_MS / 1000 });
     return session;
   };
   const authority = (session: Session): Authority => ({ owner_id: 'local', principal_id: 'admin', client_id: 'management', session_id: session.id });
@@ -129,10 +135,13 @@ export async function createServer(directory: string, port: number, options: Ser
       'x-content-type-options': 'nosniff', 'x-frame-options': 'DENY', 'referrer-policy': 'no-referrer',
       'cross-origin-resource-policy': 'same-origin', 'permissions-policy': 'camera=(), microphone=(), geolocation=()',
     });
-    let hosts = 0;
-    for (let i = 0; i < request.raw.rawHeaders.length; i += 2) if (request.raw.rawHeaders[i]?.toLowerCase() === 'host') hosts++;
-    if (hosts !== 1 || request.headers.host !== new URL(origin()).host) throw new VaultError(403, 'host_denied');
-    if (request.headers.origin !== undefined && request.headers.origin !== origin()) throw new VaultError(403, 'origin_denied');
+    const execution = executionPaths.has(request.url);
+    const expectedOrigin = execution ? executionOrigin() : origin();
+    if (!requestHostAllowed(request.raw.rawHeaders, request.raw.socket.remoteAddress, origin(), executionOrigin(), network.trustedProxy === 'loopback', execution)) {
+      if (network.diagnoseProxyHeaders) process.stderr.write(proxyHeaderDiagnostic(request.raw.rawHeaders, request.raw.socket.remoteAddress));
+      throw new VaultError(403, 'host_denied');
+    }
+    if (request.headers.origin !== undefined && request.headers.origin !== expectedOrigin) throw new VaultError(403, 'origin_denied');
     const callbackNavigation = callbackPath(request) && request.method === 'GET' && request.headers['sec-fetch-mode'] === 'navigate' && request.headers['sec-fetch-dest'] === 'document';
     if (request.headers['sec-fetch-site'] === 'cross-site' && !callbackNavigation) throw new VaultError(403, 'cross_site_denied');
     if (request.headers.authorization !== undefined && !executionPaths.has(request.url)) throw new VaultError(403, 'execution_credential_cannot_manage');
@@ -143,7 +152,7 @@ export async function createServer(directory: string, port: number, options: Ser
     // Rotating transitions already issue a new cookie and must not be overwritten.
     if (request.url.startsWith('/management/') && !reply.hasHeader('set-cookie')) {
       const session = request.cookies.vault_session ? sessions.get(request.cookies.vault_session) : undefined;
-      if (session?.authenticated && adminId === session.id && session.epoch === vault.epoch && session.expires > clock()) reply.setCookie('vault_session', session.id, { path: '/', httpOnly: true, sameSite: 'strict', maxAge: Math.max(1, Math.ceil((session.expires - clock()) / 1000)) });
+      if (session?.authenticated && adminId === session.id && session.epoch === vault.epoch && session.expires > clock()) reply.setCookie('vault_session', session.id, { ...cookieOptions, maxAge: Math.max(1, Math.ceil((session.expires - clock()) / 1000)) });
     }
     return payload;
   });
@@ -198,7 +207,7 @@ export async function createServer(directory: string, port: number, options: Ser
   });
   app.post('/management/logout', async (request, reply) => {
     management(request, 'authenticated'); parse(emptySchema, request.body);
-    globalLogout(); reply.clearCookie('vault_session', { path: '/' });
+    globalLogout(); reply.clearCookie('vault_session', cookieOptions);
     return { state: 'S0', authenticated: false, unlocked: false };
   });
   app.get('/management/connections', async request => {
@@ -349,7 +358,7 @@ export async function createServer(directory: string, port: number, options: Ser
   const timer = setInterval(sweepSessions, 1000); timer.unref();
   const retentionTimer = setInterval(() => vault.cleanupRetention(), 60_000); retentionTimer.unref();
   app.addHook('onClose', async () => { clearInterval(timer); clearInterval(retentionTimer); oauth?.invalidatePending(); vault.lock(); await browser.close(); sessions.clear(); pending.clear(); vault.close(); });
-  try { await app.listen({ host: '127.0.0.1', port }); }
+  try { await app.listen({ host: network.bindHost, port }); }
   catch (error) { clearInterval(timer); clearInterval(retentionTimer); await browser.close(); vault.close(); throw error; }
-  return { app, vault, origin: origin(), sweepSessions };
+  return { app, vault, origin: origin(), listeningOrigin: `http://${network.bindHost}:${socketPort()}`, executionOrigin: executionOrigin(), sweepSessions };
 }

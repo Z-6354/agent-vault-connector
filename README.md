@@ -24,7 +24,7 @@ node dist/src/cli.js serve --data-dir ./data --port 43120
 
 `init` requires a real interactive terminal and prompts twice without echo for a 12–1024 character passphrase. It accepts no passphrase CLI argument or environment variable. It refuses a nonempty data directory. The data directory must be current-user-owned `0700`; files are `0600`, regular and not symlinks. Initialization creates an encrypted database, an execution access key and a separate persistent request-signing key. Never place these keys in prompts, command arguments or logs.
 
-Open **http://127.0.0.1:43120** on the same machine, using the exact IP and port. The server listens only on `127.0.0.1`; `localhost`, alternate Host values, cross-origin access and proxy rewriting are unsupported. Every restart starts locked. The management flow is:
+Open **http://127.0.0.1:43120** on the same machine, using the exact IP and port. By default the server binds `127.0.0.1` and accepts only that exact Host and origin; `localhost` and alternate Host values fail. For external browser access use the explicit TLS proxy configuration below. Every restart starts locked. The management flow is:
 
 1. Log in with the initialization passphrase: S0 → S1 (authenticated, still locked).
 2. Unlock with the passphrase: S1 → S2 (authenticated and unlocked).
@@ -36,6 +36,66 @@ The management UI includes recent audit events and a **Recover save result** pan
 Lock returns the current administrator to a restricted S1 session with a rotated cookie/CSRF token; old cookies, drafts and approvals fail. Logout, a 15-minute administrator idle timeout or process restart enters S0 and globally locks execution. MCP traffic does not extend administrator idle time. Closing a tab does not immediately log out. There is at most one active administrator session. Failed passphrase attempts and request rate limits return controlled errors.
 
 The registry separates fixed synthetic HTTP fixtures from source-controlled production HTTPS destinations. API keys and passwords work without a model. `external_reference` stores metadata with no secret envelope and always has `can_execute=false`.
+
+### External browser UI behind a TLS proxy
+
+Configure exactly one canonical public origin, with no trailing slash, path, query, fragment, userinfo, wildcard or list. HTTPS is required except for an explicit `http://127.0.0.1:<port>` development origin. Uppercase/noncanonical URL spellings and redundant default ports are rejected rather than silently normalized. `--allowed-origin` is a compatibility alias with identical validation; supplying both flags is an error. Invalid network configuration fails before opening the vault or listening.
+
+```sh
+# Same-host proxy: application upstream stays on loopback.
+node dist/src/cli.js serve --data-dir ./data --port 43120 \
+  --public-origin https://vault.example.com
+
+# Container/private mapping: explicitly opt into an IPv4 bind.
+node dist/src/cli.js serve --data-dir ./data --port 43120 \
+  --bind-host 0.0.0.0 --public-origin https://vault.example.com
+```
+
+The default bind is `127.0.0.1`; `--bind-host` accepts only `127.0.0.1` or `0.0.0.0` so the local bridge stays reachable. Wildcard binding requires an explicit HTTPS public origin. **Firewall a nonloopback HTTP upstream to the TLS proxy only.** Publish only the proxy's TLS listener; never expose the application's cleartext socket directly. For a same-host container proxy, a mapping such as `127.0.0.1:43120:43120` keeps the host-side upstream private. Network isolation and TLS are deployment responsibilities; the application cannot infer them from headers.
+
+Example nginx configuration for a same-host proxy (replace the example domain and certificate paths with your provisioned values):
+
+```nginx
+server {
+    listen 443 ssl;
+    server_name vault.example.com;
+    ssl_certificate /etc/nginx/tls/vault.example.com.crt;
+    ssl_certificate_key /etc/nginx/tls/vault.example.com.key;
+
+    location /execution/ { return 403; }
+    location / {
+        proxy_pass http://127.0.0.1:43120;
+        proxy_set_header Host vault.example.com;
+        proxy_set_header Origin $http_origin;
+        proxy_set_header Forwarded "";
+        proxy_set_header X-Forwarded-Host "";
+        proxy_set_header X-Forwarded-Proto "";
+        proxy_set_header X-Forwarded-For "";
+    }
+}
+```
+
+For a public nondefault TLS port, include that port in both `--public-origin` and the preserved `Host`. The browser's original `Origin` must pass through unchanged; do not manufacture it or replace it with the upstream origin. By default a mapping service must preserve the configured public Host and browser Origin and provide TLS. Fastify proxy trust stays disabled. A management cookie alone cannot bypass same-origin CSRF validation.
+
+For the administrator-observed example-host gateway, which rewrites Host to `127.0.0.1:<port>`, explicitly enable the fixed loopback proxy mode on the next operator-controlled startup (use your existing data-directory and product-config arguments):
+
+```sh
+node dist/src/cli.js serve --data-dir <existing-data-directory> --port <port> \
+  --public-origin https://vault.example.com \
+  --trusted-proxy loopback --diagnose-proxy-headers false
+```
+
+`--trusted-proxy loopback` defaults off and requires a configured HTTPS public origin. It admits the rewritten Host only when it equals `127.0.0.1:<actual-listening-port>` and the actual socket peer is exactly `127.0.0.1`, `::ffff:127.0.0.1`, or `::ffff:7f00:1`. These are the complete accepted peer strings; `::1`, other `127/8` addresses and other textual IPv6 spellings are rejected. There must be exactly one raw Host, exactly one raw X-Forwarded-Host equal to the configured public origin's host (including any nondefault port), and exactly one raw X-Forwarded-Proto equal to `https`. Duplicate, comma/list, conflicting or missing forwarding fields fail closed. RFC Forwarded is rejected in this mode. The established direct public Host path remains permitted without forwarding fields; if forwarding fields are present on that path they must satisfy the same exact tuple and peer checks. Forwarded values never choose a new origin. Static assets, OAuth redirects/callbacks and management Origin/CSRF checks always use the configured public origin. Preserve the browser's original Origin unchanged.
+
+**A loopback peer does not prove gateway provenance.** The deployment must restrict access to the upstream and require the gateway to overwrite these forwarding fields and strip conflicting/client-supplied values (including Forwarded); headers are not authentication. Local processes can forge this tuple. The CLI prints this warning when the mode is enabled. Execution rejects any X-Forwarded-Host or X-Forwarded-Proto, including otherwise valid gateway values, and still requires the exact local Host, accepted actual socket peer and execution bearer. Block `/execution/` at the public gateway as an additional deployment restriction.
+
+Proxy diagnostics remain off by default. If temporarily sampling with `--diagnose-proxy-headers true`, disable them after the sample (`--diagnose-proxy-headers false` or omit the option on the next operator-controlled startup). The diagnostic allowlist contains only bounded Host/count, Origin, X-Forwarded-Host, X-Forwarded-Proto and actual peer; it never logs cookies, authorization, URL/query or body. See [trusted proxy evidence and verification status](docs/evidence/trusted-proxy.md). These instructions do not restart the existing service.
+
+Startup prints the actual listening HTTP socket separately from the public management URL and local execution origin. In public mode all session issue, renewal, lock and logout-clear cookies carry `Secure`, `HttpOnly` and `SameSite=Strict`. Login and unlock remain separate. Register OAuth callbacks as `https://vault.example.com/management/oauth/callback/github` and `/google` (including your configured port when present); the UI and stored client configuration use that exact validated origin. Changing it requires updating the provider's registered callbacks, then reconfiguring the local client (incrementing its version); old token material bound to the prior client configuration cannot be reused. Restart invalidates the prior session and state, so initiate a fresh authorization in a new authenticated session. An origin mismatch fails closed with `redirect_uri_changed` and disables the mismatched provider. Merely signing in again does not revive the old callback. This origin-migration/reconfiguration scenario has been inspected in source but was not directly exercised dynamically.
+
+The standard stdio bridge still uses `http://127.0.0.1:<application-port>` **inside the server's network namespace**, even when management uses a public URL. Execution accepts its exact local Host, an actual loopback peer and the execution credential, with no browser cookie or Origin. The local execution Host cannot manage a server configured for a different public Host unless the explicit trusted loopback mode validates the complete fixed gateway tuple described above. A wildcard container bind keeps this in-container loopback socket reachable; run the bridge in that same container/network namespace. This does not provide remote MCP access.
+
+Local validation passed: build and all 7 focused proxy/server-auth/CLI tests succeeded, including a task-created vault and a real local TLS reverse proxy. The designated Hermes reviewer gave this increment a qualified pass after inspecting source and the existing execution evidence; the reviewer did not personally rerun tests. See [reverse proxy evidence](docs/evidence/reverse-proxy.md). Public deployment, real DNS/certificates, nginx/firewall operation and any external mapping service remain unverified. No deployment is performed by these changes.
 
 ### Controlled browser configuration
 
