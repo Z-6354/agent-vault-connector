@@ -1,0 +1,341 @@
+TAP version 13
+# Subtest: real Chromium fills fixed local form once without submission, no secret output, then separately approved submit creates host-owned session
+ok 1 - real Chromium fills fixed local form once without submission, no secret output, then separately approved submit creates host-owned session
+  ---
+  duration_ms: 478.271831
+  type: 'test'
+  ...
+# Subtest: handle bound to principal, host, context, exact origins and strict request schema; caller identity cannot register a page
+ok 2 - handle bound to principal, host, context, exact origins and strict request schema; caller identity cannot register a page
+  ---
+  duration_ms: 343.34932
+  type: 'test'
+  ...
+# Subtest: same-origin reload, navigation, fragment navigation and document.open replacement invalidate original document handles
+    # Subtest: reload
+    ok 1 - reload
+      ---
+      duration_ms: 191.850408
+      type: 'test'
+      ...
+    # Subtest: navigate
+    ok 2 - navigate
+      ---
+      duration_ms: 185.111429
+      type: 'test'
+      ...
+    # Subtest: fragment
+    ok 3 - fragment
+      ---
+      duration_ms: 150.890701
+      type: 'test'
+      ...
+    # Subtest: document.open
+    ok 4 - document.open
+      ---
+      duration_ms: 180.698169
+      type: 'test'
+      ...
+    1..4
+ok 3 - same-origin reload, navigation, fragment navigation and document.open replacement invalidate original document handles
+  ---
+  duration_ms: 710.689367
+  type: 'test'
+  ...
+# Subtest: same-origin frame reload/replacement/removal and unrelated frame tree changes invalidate handles
+    # Subtest: reload-frame
+    ok 1 - reload-frame
+      ---
+      duration_ms: 196.977959
+      type: 'test'
+      ...
+    # Subtest: replace-frame
+    ok 2 - replace-frame
+      ---
+      duration_ms: 235.059746
+      type: 'test'
+      ...
+    # Subtest: remove-frame
+    ok 3 - remove-frame
+      ---
+      duration_ms: 216.471807
+      type: 'test'
+      ...
+    # Subtest: add-frame
+    ok 4 - add-frame
+      ---
+      duration_ms: 235.942646
+      type: 'test'
+      ...
+    1..4
+ok 4 - same-origin frame reload/replacement/removal and unrelated frame tree changes invalidate handles
+  ---
+  duration_ms: 886.173008
+  type: 'test'
+  ...
+# Subtest: approved same-origin frame fills successfully without submit; cross-origin frame refused despite caller matching top origin
+ok 5 - approved same-origin frame fills successfully without submit; cross-origin frame refused despite caller matching top origin
+  ---
+  duration_ms: 450.997614
+  type: 'test'
+  ...
+# Subtest: fixed action, target, field associations, duplicate selectors and main-world prototype tampering cannot bypass trusted rules
+    # Subtest: action
+    ok 1 - action
+      ---
+      duration_ms: 211.234587
+      type: 'test'
+      ...
+    # Subtest: target
+    ok 2 - target
+      ---
+      duration_ms: 189.540509
+      type: 'test'
+      ...
+    # Subtest: duplicate
+    ok 3 - duplicate
+      ---
+      duration_ms: 207.544337
+      type: 'test'
+      ...
+    # Subtest: field-type
+    ok 4 - field-type
+      ---
+      duration_ms: 198.425358
+      type: 'test'
+      ...
+    # Subtest: prototype
+    ok 5 - prototype
+      ---
+      duration_ms: 177.74439
+      type: 'test'
+      ...
+    1..5
+ok 6 - fixed action, target, field associations, duplicate selectors and main-world prototype tampering cannot bypass trusted rules
+  ---
+  duration_ms: 985.894171
+  type: 'test'
+  ...
+# Subtest: five-minute handle TTL, sixty-second approval TTL, record version/status/policy, lock/epoch and closed contexts reject without secret dispatch
+    # Subtest: handle-ttl
+    ok 1 - handle-ttl
+      ---
+      duration_ms: 126.189582
+      type: 'test'
+      ...
+    # Subtest: approval-ttl
+    ok 2 - approval-ttl
+      ---
+      duration_ms: 140.468142
+      type: 'test'
+      ...
+    # Subtest: record
+    ok 3 - record
+      ---
+      duration_ms: 144.064171
+      type: 'test'
+      ...
+    # Subtest: status
+    ok 4 - status
+      ---
+      duration_ms: 139.493302
+      type: 'test'
+      ...
+    # Subtest: status-roundtrip
+    ok 5 - status-roundtrip
+      ---
+      duration_ms: 141.444622
+      type: 'test'
+      ...
+    # Subtest: policy
+    ok 6 - policy
+      ---
+      duration_ms: 135.356891
+      type: 'test'
+      ...
+    # Subtest: lock
+    ok 7 - lock
+      ---
+      duration_ms: 144.865252
+      type: 'test'
+      ...
+    # Subtest: epoch
+    ok 8 - epoch
+      ---
+      duration_ms: 143.214171
+      type: 'test'
+      ...
+    # Subtest: context-close
+    ok 9 - context-close
+      ---
+      duration_ms: 137.297802
+      type: 'test'
+      ...
+    1..9
+ok 7 - five-minute handle TTL, sixty-second approval TTL, record version/status/policy, lock/epoch and closed contexts reject without secret dispatch
+  ---
+  duration_ms: 1254.229485
+  type: 'test'
+  ...
+# Subtest: same-origin navigation between approval/dispatch and actual secret callback refuses original handle; cannot refill after ambiguous write
+ok 8 - same-origin navigation between approval/dispatch and actual secret callback refuses original handle; cannot refill after ambiguous write
+  ---
+  duration_ms: 178.087119
+  type: 'test'
+  ...
+# Subtest: submit approval is distinct, single-use, expires, and binds record plus document plus same-origin action
+    # Subtest: expires
+    ok 1 - expires
+      ---
+      duration_ms: 151.256611
+      type: 'test'
+      ...
+    # Subtest: record
+    ok 2 - record
+      ---
+      duration_ms: 143.354402
+      type: 'test'
+      ...
+    # Subtest: reload
+    ok 3 - reload
+      ---
+      duration_ms: 190.065759
+      type: 'test'
+      ...
+    # Subtest: action
+    ok 4 - action
+      ---
+      duration_ms: 181.125139
+      type: 'test'
+      ...
+    # Subtest: replay-new-ticket
+    ok 5 - replay-new-ticket
+      ---
+      duration_ms: 184.945079
+      type: 'test'
+      ...
+    1..5
+ok 9 - submit approval is distinct, single-use, expires, and binds record plus document plus same-origin action
+  ---
+  duration_ms: 851.87472
+  type: 'test'
+  ...
+# Subtest: upstream accepted then disconnected returns outcome_unknown; same ticket replay and new ticket after journal restart never resend
+ok 10 - upstream accepted then disconnected returns outcome_unknown; same ticket replay and new ticket after journal restart never resend
+  ---
+  duration_ms: 313.570701
+  type: 'test'
+  ...
+# Subtest: committed login followed by HTTP 500 remains outcome_unknown and blocks replay/new-ticket dispatch
+ok 11 - committed login followed by HTTP 500 remains outcome_unknown and blocks replay/new-ticket dispatch
+  ---
+  duration_ms: 217.373857
+  type: 'test'
+  ...
+# Subtest: approval single-use remains atomic under concurrent fills; TTL and policy are checked again before the final write
+    # Subtest: concurrent fill
+    ok 1 - concurrent fill
+      ---
+      duration_ms: 167.47693
+      type: 'test'
+      ...
+    # Subtest: approval-ttl
+    ok 2 - approval-ttl
+      ---
+      duration_ms: 151.021531
+      type: 'test'
+      ...
+    # Subtest: policy
+    ok 3 - policy
+      ---
+      duration_ms: 175.50986
+      type: 'test'
+      ...
+    # Subtest: epoch
+    ok 4 - epoch
+      ---
+      duration_ms: 155.20862
+      type: 'test'
+      ...
+    1..4
+ok 12 - approval single-use remains atomic under concurrent fills; TTL and policy are checked again before the final write
+  ---
+  duration_ms: 650.217371
+  type: 'test'
+  ...
+# Subtest: actual encrypted Vault SQLite journal + signed tickets + browser mapper persist unknown submit across full Vault and host restart
+ok 13 - actual encrypted Vault SQLite journal + signed tickets + browser mapper persist unknown submit across full Vault and host restart
+  ---
+  duration_ms: 818.738951
+  type: 'test'
+  ...
+# Subtest: real same-origin framed submit uses the session-bound second rule and dispatch denial terminates accepted without network
+ok 14 - real same-origin framed submit uses the session-bound second rule and dispatch denial terminates accepted without network
+  ---
+  duration_ms: 189.979089
+  type: 'test'
+  ...
+# Subtest: idle pruning closes expired password contexts and epoch/record changes; stale owner close grants no browser action
+    # Subtest: expired
+    ok 1 - expired
+      ---
+      duration_ms: 174.09341
+      type: 'test'
+      ...
+    # Subtest: epoch
+    ok 2 - epoch
+      ---
+      duration_ms: 155.03549
+      type: 'test'
+      ...
+    # Subtest: record
+    ok 3 - record
+      ---
+      duration_ms: 174.2818
+      type: 'test'
+      ...
+    # Subtest: status
+    ok 4 - status
+      ---
+      duration_ms: 180.009409
+      type: 'test'
+      ...
+    # Subtest: policy
+    ok 5 - policy
+      ---
+      duration_ms: 177.44144
+      type: 'test'
+      ...
+    # Subtest: stale-close
+    ok 6 - stale-close
+      ---
+      duration_ms: 162.22409
+      type: 'test'
+      ...
+    1..6
+ok 15 - idle pruning closes expired password contexts and epoch/record changes; stale owner close grants no browser action
+  ---
+  duration_ms: 1025.860239
+  type: 'test'
+  ...
+# Subtest: host session and approval caps bound allocation; expired approvals free capacity and closed hosts detach shared-browser listeners
+ok 16 - host session and approval caps bound allocation; expired approvals free capacity and closed hosts detach shared-browser listeners
+  ---
+  duration_ms: 538.547028
+  type: 'test'
+  ...
+# Subtest: unsupported host/rules never downgrade to caller URLs; trusted static rules copied immutably
+ok 17 - unsupported host/rules never downgrade to caller URLs; trusted static rules copied immutably
+  ---
+  duration_ms: 169.25537
+  type: 'test'
+  ...
+1..17
+# tests 54
+# suites 0
+# pass 54
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 10473.248516

@@ -1,0 +1,165 @@
+
+> agent-vault-connector@0.1.0 acceptance
+> npm run build && npm test
+
+
+> agent-vault-connector@0.1.0 build
+> tsc && node scripts/copy-ui.mjs
+
+
+> agent-vault-connector@0.1.0 test
+> node --test --test-concurrency=1 dist/tests/*.test.js
+
+TAP version 13
+# Subtest: real management HTTP → official SDK stdio MCP → local mock acceptance
+    # Subtest: interactive init via PTY hides input and refuses existing database
+    ok 1 - interactive init via PTY hides input and refuses existing database
+      ---
+      duration_ms: 382.878227
+      type: 'test'
+      ...
+    # Subtest: startup locked, exact Host/Origin and CSRF checks including unlock
+    ok 2 - startup locked, exact Host/Origin and CSRF checks including unlock
+      ---
+      duration_ms: 78.634936
+      type: 'test'
+      ...
+    # Subtest: bridge missing/bad/unsafe file denied with no stdout protocol contamination
+    ok 3 - bridge missing/bad/unsafe file denied with no stdout protocol contamination
+      ---
+      duration_ms: 417.066495
+      type: 'test'
+      ...
+    # Subtest: official SDK handshake, tools list, locked list denied
+    ok 4 - official SDK handshake, tools list, locked list denied
+      ---
+      duration_ms: 152.187411
+      type: 'test'
+      ...
+    # Subtest: human unlock and encrypted creation; bearer cannot manage
+    ok 5 - human unlock and encrypted creation; bearer cannot manage
+      ---
+      duration_ms: 100.801884
+      type: 'test'
+      ...
+    # Subtest: MCP operation reaches mock; output whitelist and nested secret redaction
+    ok 6 - MCP operation reaches mock; output whitelist and nested secret redaction
+      ---
+      duration_ms: 13.569979
+      type: 'test'
+      ...
+    # Subtest: replace is immediate on next call; random nonce changes for same plaintext
+    ok 7 - replace is immediate on next call; random nonce changes for same plaintext
+      ---
+      duration_ms: 8.099779
+      type: 'test'
+      ...
+    # Subtest: unknown operation, agent URL/headers/path/scripts and SSRF arguments denied
+    ok 8 - unknown operation, agent URL/headers/path/scripts and SSRF arguments denied
+      ---
+      duration_ms: 9.86694
+      type: 'test'
+      ...
+    # Subtest: redirect, oversized response and timeout fail closed over actual mock HTTP
+    ok 9 - redirect, oversized response and timeout fail closed over actual mock HTTP
+      ---
+      duration_ms: 2515.89393
+      type: 'test'
+      ...
+    # Subtest: ciphertext tampering denies real MCP operation
+    ok 10 - ciphertext tampering denies real MCP operation
+      ---
+      duration_ms: 3.63153
+      type: 'test'
+      ...
+    # Subtest: lock and restart deny MCP until new human unlock; delete invalidates
+    ok 11 - lock and restart deny MCP until new human unlock; delete invalidates
+      ---
+      duration_ms: 470.785381
+      type: 'test'
+      ...
+    # Subtest: real Chromium UI unlock/create/replace/delete/lock and XSS-safe label
+    not ok 12 - real Chromium UI unlock/create/replace/delete/lock and XSS-safe label
+      ---
+      duration_ms: 34616.028817
+      type: 'test'
+      location: '/path/to/workspace/agent-vault-connector/dist/tests/acceptance.test.js:290:17'
+      failureType: 'testCodeFailure'
+      error: |-
+        locator.waitFor: Timeout 30000ms exceeded.
+        Call log:
+          - waiting for getByText('No credentials yet. Add a synthetic token below.') to be visible
+        
+      code: 'ERR_TEST_FAILURE'
+      name: 'TimeoutError'
+      stack: |-
+        TestContext.<anonymous> (/path/to/workspace/agent-vault-connector/dist/tests/acceptance.test.js:318:90)
+        async TestContext.<anonymous> (/path/to/workspace/agent-vault-connector/dist/tests/acceptance.test.js:290:9)
+      ...
+    # Subtest: five bad unlocks lock active vault; cooldown persists across restart
+    ok 13 - five bad unlocks lock active vault; cooldown persists across restart
+      ---
+      duration_ms: 592.063925
+      type: 'test'
+      ...
+    # Subtest: database, sidecars, logs, MCP output contain no synthetic plaintext tokens
+    ok 14 - database, sidecars, logs, MCP output contain no synthetic plaintext tokens
+      ---
+      duration_ms: 0.68587
+      type: 'test'
+      ...
+    1..14
+not ok 1 - real management HTTP → official SDK stdio MCP → local mock acceptance
+  ---
+  duration_ms: 39683.416434
+  type: 'test'
+  location: '/path/to/workspace/agent-vault-connector/dist/tests/acceptance.test.js:61:1'
+  failureType: 'subtestsFailed'
+  error: '1 subtest failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# Subtest: AES-GCM random nonces, scrypt, tamper and authenticated context
+ok 2 - AES-GCM random nonces, scrypt, tamper and authenticated context
+  ---
+  duration_ms: 61.355716
+  type: 'test'
+  ...
+# Subtest: outbound policy rejects private/reserved IPv4 and IPv6 and unsafe origins without network
+ok 3 - outbound policy rejects private/reserved IPv4 and IPv6 and unsafe origins without network
+  ---
+  duration_ms: 6.56431
+  type: 'test'
+  ...
+# Subtest: secret scrubber removes nested values and object keys
+ok 4 - secret scrubber removes nested values and object keys
+  ---
+  duration_ms: 0.37323
+  type: 'test'
+  ...
+# Subtest: init refuses overwrite; files enforce modes, ownership and symlink rejection
+ok 5 - init refuses overwrite; files enforce modes, ownership and symlink rejection
+  ---
+  duration_ms: 66.571206
+  type: 'test'
+  ...
+# Subtest: lock zeroes retained master key buffer and unlock failures persist across restarts
+ok 6 - lock zeroes retained master key buffer and unlock failures persist across restarts
+  ---
+  duration_ms: 420.694015
+  type: 'test'
+  ...
+# Subtest: bridge requires exact loopback server origin
+ok 7 - bridge requires exact loopback server origin
+  ---
+  duration_ms: 0.41389
+  type: 'test'
+  ...
+1..7
+# tests 21
+# suites 0
+# pass 19
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 42184.659945

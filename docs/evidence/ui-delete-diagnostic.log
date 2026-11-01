@@ -1,0 +1,3 @@
+{"check":"UI-style DELETE with JSON content type and no body","status":400,"result":{"error":"Invalid request"}}
+{"check":"credential remains after rejected UI-style DELETE","status":200,"count":1}
+{"check":"DELETE with framed JSON body","status":200,"result":{"ok":true}}

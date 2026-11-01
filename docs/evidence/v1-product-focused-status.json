@@ -1,0 +1,30 @@
+{
+  "completed": "2026-11-01T08:31:06.145935+00:00",
+  "steps": [
+    {
+      "command": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "exitCode": 0
+    },
+    {
+      "command": [
+        "node",
+        "--test",
+        "--test-concurrency=1",
+        "dist/tests/product-routes.test.js",
+        "dist/tests/core-contract.test.js",
+        "dist/tests/server-auth.test.js",
+        "dist/tests/mcp-execution.test.js",
+        "dist/tests/server-recovery.test.js",
+        "dist/tests/oauth-product.test.js",
+        "dist/tests/browser-product.test.js",
+        "dist/tests/oauth-network.test.js",
+        "dist/tests/security.test.js"
+      ],
+      "exitCode": 0
+    }
+  ]
+}

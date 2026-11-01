@@ -1,0 +1,14 @@
+{
+  "command": [
+    "node",
+    "--input-type=module"
+  ],
+  "stdin_file": "ui-delete-diagnostic.mjs",
+  "environment": {
+    "PATH": "/usr/local/bin:/usr/bin:/bin",
+    "HOME": "/path/to/home/.hermes/profiles/developer/cache/scratch/agent-connector-review-8lnj9xrn/home",
+    "TMPDIR": "/tmp/avc-pv2hbkt3"
+  },
+  "exit_code": 0,
+  "seconds": 0.3
+}

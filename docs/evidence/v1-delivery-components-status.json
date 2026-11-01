@@ -1,0 +1,25 @@
+[
+  {
+    "command": [
+      "npm",
+      "run",
+      "build"
+    ],
+    "cwd": "/path/to/workspace/agent-vault-connector",
+    "exit_code": 0,
+    "recorded_at": "2026-11-01T05:39:45.923492+00:00"
+  },
+  {
+    "command": [
+      "node",
+      "--test",
+      "--test-concurrency=1",
+      "dist/tests/delegation.test.js",
+      "dist/tests/local-draft.test.js",
+      "dist/tests/enrollment-mcp.test.js"
+    ],
+    "cwd": "/path/to/workspace/agent-vault-connector",
+    "exit_code": 0,
+    "recorded_at": "2026-11-01T05:39:49.926253+00:00"
+  }
+]

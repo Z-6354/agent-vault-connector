@@ -1,0 +1,4 @@
+
+> agent-vault-connector@0.1.0 build
+> tsc && node scripts/copy-ui.mjs
+

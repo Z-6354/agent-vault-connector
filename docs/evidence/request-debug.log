@@ -1,0 +1,14 @@
+{"route":"/management/session","method":"GET","withBody":true,"status":400,"text":"{\"error\":\"Bad Request\",\"message\":\"Client Error\",\"statusCode\":400}"}
+node:_http_client:599
+    emitErrorEvent(req, new ConnResetException('socket hang up'));
+                        ^
+
+Error: socket hang up
+    at Socket.socketOnEnd (node:_http_client:599:25)
+    at Socket.emit (node:events:531:35)
+    at endReadableNT (node:internal/streams/readable:1698:12)
+    at process.processTicksAndRejections (node:internal/process/task_queues:89:21) {
+  code: 'ECONNRESET'
+}
+
+Node.js v22.23.3

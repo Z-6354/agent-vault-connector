@@ -1,0 +1,92 @@
+{
+  "started": "2026-11-01T08:37:32.756Z",
+  "completed": "2026-11-01T08:37:48.279Z",
+  "result": "passed",
+  "synthetic": true,
+  "entrypoints": {
+    "initialize": "node dist/src/cli.js init --data-dir <scratch>/vault --synthetic true (PTY)",
+    "serve": "node dist/src/cli.js serve --data-dir <scratch>/vault --port <free> --product-config <private JSON>",
+    "execution": "official SDK StdioClientTransport -> node dist/src/cli.js bridge --origin <loopback> --credential-file <scratch>/vault/execution.key"
+  },
+  "browser": "sandboxed system Chromium via Playwright; separate product-controlled Chromium host",
+  "checks": [
+    "actual CLI init with controlling PTY; hidden passphrase input",
+    "built default CLI serve with private explicit synthetic product configuration",
+    "Chromium management S0 to S1 login and separate S1 to S2 unlock",
+    "official SDK Client and StdioClientTransport launch the built CLI bridge",
+    "GitHub and Google separately: UI client and reviewed save, browser authorize and protected callback, fixed stdio operation, real expiry with two calls and one refresh, UI revoke and no-hit denial",
+    "password reviewed and saved through Chromium; stdio opens controlled session; unapproved fill denied; UI card binds execution:local/site/record/action; approved fill makes zero submissions",
+    "submit requested and separately approved in UI; actual fixture accepts filled credentials once; stdio status reuses authenticated cookie",
+    "UI lock causes stdio vault_locked denial; unlocking does not revive the prior browser approval",
+    "synthetic secrets absent from management text, cleared password inputs, CLI diagnostics and MCP output; management browser made only allowed loopback requests"
+  ],
+  "oauth": {
+    "github": {
+      "fixture": "independent loopback protocol simulator",
+      "scopes": [
+        "read:user"
+      ],
+      "clientConfiguredViaUI": true,
+      "reviewedConnectionSavedViaUI": true,
+      "authorizeNavigationAndProtectedCallback": true,
+      "fixedOperationViaStdio": true,
+      "realClockExpirySeconds": 5,
+      "concurrentCalls": 2,
+      "refreshRequestsForConcurrentCalls": 1,
+      "revokedViaUI": true,
+      "executionDeniedAfterRevoke": true,
+      "counts": {
+        "authorize": 1,
+        "exchange": 1,
+        "refresh": 1,
+        "identity": 4,
+        "revoke": 1,
+        "callback": 0
+      }
+    },
+    "google": {
+      "fixture": "independent loopback protocol simulator",
+      "scopes": [
+        "openid",
+        "email"
+      ],
+      "clientConfiguredViaUI": true,
+      "reviewedConnectionSavedViaUI": true,
+      "authorizeNavigationAndProtectedCallback": true,
+      "fixedOperationViaStdio": true,
+      "realClockExpirySeconds": 5,
+      "concurrentCalls": 2,
+      "refreshRequestsForConcurrentCalls": 1,
+      "revokedViaUI": true,
+      "executionDeniedAfterRevoke": true,
+      "counts": {
+        "authorize": 1,
+        "exchange": 1,
+        "refresh": 1,
+        "identity": 4,
+        "revoke": 1,
+        "callback": 0
+      }
+    }
+  },
+  "controlledBrowser": {
+    "fixedSite": "synthetic-login",
+    "fixtureSubmissions": 1,
+    "authenticatedSubmissions": 1,
+    "cookieSessionVisits": 1,
+    "fillAutoSubmitted": false,
+    "submitSeparatelyApproved": true,
+    "unapprovedFillDenied": true,
+    "unapprovedSubmitDenied": true,
+    "lockedFillDenied": true,
+    "priorApprovalInvalidAfterUnlock": true
+  },
+  "pageErrors": 0,
+  "unexpectedManagementBrowserNetworkRequests": 0,
+  "limitations": [
+    "local synthetic protocol and site evidence only",
+    "real provider client registration and account authorization remain unverified",
+    "five-agent built-in browser integration remains unverified",
+    "no external deployment or optional model invocation"
+  ]
+}

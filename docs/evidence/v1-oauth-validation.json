@@ -1,0 +1,40 @@
+{
+  "started_at": "2026-11-01T05:23:43.565116+00:00",
+  "scope": "Synthetic loopback OAuth provider protocol and encrypted SQLite integration only; no real provider/account validation.",
+  "commands": [
+    {
+      "command": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "exit_code": 0,
+      "log": "docs/evidence/v1-oauth-build.log"
+    },
+    {
+      "command": [
+        "node",
+        "--test",
+        "--test-concurrency=1",
+        "dist/tests/oauth.test.js",
+        "dist/tests/oauth-vault.test.js"
+      ],
+      "exit_code": 0,
+      "log": "docs/evidence/v1-oauth-tests.log"
+    }
+  ],
+  "test_summary": [
+    "# tests 28",
+    "# pass 28",
+    "# fail 0",
+    "# duration_ms 1282.000693"
+  ],
+  "source_sha256": {
+    "src/oauth.ts": "69c4abe2f3c3eabec53fabe3cff9014f905c15a74c73b7b2a4e54c099cd45508",
+    "src/oauth-vault.ts": "0ed037b62f7551f7e5f454016bde1c8c1296d39389c67f8050877d1bce773950",
+    "src/oauth-simulator.ts": "c4727be12b7a6c3b476a115ed659afa924da56bd6af05ff7657c9a394b8150a9",
+    "tests/oauth.test.ts": "6165bd586a5ece30ccbdc3102175a8cf2a1d5c2db90ce0c2e4aa518ba3d72ce5",
+    "tests/oauth-vault.test.ts": "3a87c1cc8b13c50bece68b627b60232159e364dd4bfca93af8cf888931affc4c"
+  },
+  "finished_at": "2026-11-01T05:23:47.399162+00:00"
+}

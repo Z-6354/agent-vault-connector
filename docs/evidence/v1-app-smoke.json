@@ -1,0 +1,21 @@
+{
+  "started": "2026-11-01T05:42:28.190Z",
+  "completed": "2026-11-01T05:42:29.660Z",
+  "entrypoint": "node dist/src/cli.js serve",
+  "browser": "sandboxed system Chromium via Playwright",
+  "synthetic": true,
+  "checks": [
+    "CLI socket served",
+    "S0 to S1 login",
+    "S1 to S2 unlock",
+    "draft review",
+    "confirmed encrypted save",
+    "safe audit events visible",
+    "signed ticket save-result recovery",
+    "secret absent from page and logs",
+    "delete",
+    "lock to S1"
+  ],
+  "pageErrors": 0,
+  "result": "passed"
+}

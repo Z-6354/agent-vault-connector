@@ -1,0 +1,48 @@
+{
+  "commands": [
+    [
+      "python3",
+      "tests/pty-init.py",
+      "/path/to/workspace/agent-vault-connector",
+      "/tmp/avc-pv2hbkt3/cli-smoke-tho8lyb8/vault"
+    ],
+    [
+      "node",
+      "dist/src/cli.js",
+      "serve",
+      "--data-dir",
+      "/tmp/avc-pv2hbkt3/cli-smoke-tho8lyb8/vault",
+      "--port",
+      "55373"
+    ]
+  ],
+  "environment": {
+    "PATH": "/usr/local/bin:/usr/bin:/bin",
+    "HOME": "/path/to/home/.hermes/profiles/developer/cache/scratch/agent-connector-review-8lnj9xrn/home",
+    "TMPDIR": "/tmp/avc-pv2hbkt3/cli-smoke-tho8lyb8"
+  },
+  "results": [
+    {
+      "command": "PTY CLI init",
+      "exit_code": 0,
+      "output": "{\"pty\": \"passed\", \"echo\": false, \"exitCode\": 0}"
+    },
+    {
+      "route": "/",
+      "status": 200,
+      "renders_title": true,
+      "csp_present": true
+    },
+    {
+      "route": "/management/session",
+      "status": 200,
+      "unlocked": false,
+      "authenticated": false
+    },
+    {
+      "command": "serve shutdown",
+      "exit_code": 0,
+      "output": "Vault listening at http://127.0.0.1:55373 (locked)"
+    }
+  ]
+}

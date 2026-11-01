@@ -1,0 +1,289 @@
+
+> agent-vault-connector@0.1.0 acceptance
+> npm run build && npm test
+
+
+> agent-vault-connector@0.1.0 build
+> tsc && node scripts/copy-ui.mjs
+
+
+> agent-vault-connector@0.1.0 test
+> node --test --test-concurrency=1 dist/tests/*.test.js
+
+TAP version 13
+# Subtest: real management HTTP → official SDK stdio MCP → local mock acceptance
+    # Subtest: interactive init via PTY hides input and refuses existing database
+    ok 1 - interactive init via PTY hides input and refuses existing database
+      ---
+      duration_ms: 426.592194
+      type: 'test'
+      ...
+    # Subtest: startup locked, exact Host/Origin and CSRF checks including unlock
+    ok 2 - startup locked, exact Host/Origin and CSRF checks including unlock
+      ---
+      duration_ms: 78.074165
+      type: 'test'
+      ...
+    # Subtest: bridge missing/bad/unsafe file denied with no stdout protocol contamination
+    ok 3 - bridge missing/bad/unsafe file denied with no stdout protocol contamination
+      ---
+      duration_ms: 652.727611
+      type: 'test'
+      ...
+    # Subtest: official SDK handshake, tools list, locked list denied
+    ok 4 - official SDK handshake, tools list, locked list denied
+      ---
+      duration_ms: 2839.423921
+      type: 'test'
+      ...
+    # Subtest: human unlock and encrypted creation; bearer cannot manage
+    not ok 5 - human unlock and encrypted creation; bearer cannot manage
+      ---
+      duration_ms: 63.355786
+      type: 'test'
+      location: '/path/to/workspace/agent-vault-connector/dist/tests/acceptance.test.js:181:17'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly equal:
+        
+        400 !== 403
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 403
+      actual: 400
+      operator: 'strictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///path/to/workspace/agent-vault-connector/dist/tests/acceptance.test.js:187:24)
+        process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async TestContext.<anonymous> (file:///path/to/workspace/agent-vault-connector/dist/tests/acceptance.test.js:181:9)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+      ...
+    # Subtest: MCP operation reaches mock; output whitelist and nested secret redaction
+    not ok 6 - MCP operation reaches mock; output whitelist and nested secret redaction
+      ---
+      duration_ms: 13.109959
+      type: 'test'
+      location: '/path/to/workspace/agent-vault-connector/dist/tests/acceptance.test.js:204:17'
+      failureType: 'testCodeFailure'
+      error: |-
+        The expression evaluated to a falsy value:
+        
+          assert(!result.isError)
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: true
+      actual: false
+      operator: '=='
+      stack: |-
+        TestContext.<anonymous> (file:///path/to/workspace/agent-vault-connector/dist/tests/acceptance.test.js:209:13)
+        process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async TestContext.<anonymous> (file:///path/to/workspace/agent-vault-connector/dist/tests/acceptance.test.js:204:9)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+      ...
+    # Subtest: replace is immediate on next call; random nonce changes for same plaintext
+    not ok 7 - replace is immediate on next call; random nonce changes for same plaintext
+      ---
+      duration_ms: 2.23759
+      type: 'test'
+      location: '/path/to/workspace/agent-vault-connector/dist/tests/acceptance.test.js:218:17'
+      failureType: 'testCodeFailure'
+      error: "Cannot read properties of undefined (reading 'encrypted')"
+      code: 'ERR_TEST_FAILURE'
+      name: 'TypeError'
+      stack: |-
+        encrypted (file:///path/to/workspace/agent-vault-connector/dist/tests/acceptance.test.js:220:116)
+        TestContext.<anonymous> (file:///path/to/workspace/agent-vault-connector/dist/tests/acceptance.test.js:222:27)
+        Test.runInAsyncScope (node:async_hooks:214:14)
+        Test.run (node:internal/test_runner/test:1047:25)
+        Test.start (node:internal/test_runner/test:944:17)
+        TestContext.test (node:internal/test_runner/test:373:20)
+        TestContext.<anonymous> (file:///path/to/workspace/agent-vault-connector/dist/tests/acceptance.test.js:218:17)
+        process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+      ...
+    # Subtest: unknown operation, agent URL/headers/path/scripts and SSRF arguments denied
+    ok 8 - unknown operation, agent URL/headers/path/scripts and SSRF arguments denied
+      ---
+      duration_ms: 21.265139
+      type: 'test'
+      ...
+    # Subtest: redirect, oversized response and timeout fail closed over actual mock HTTP
+    not ok 9 - redirect, oversized response and timeout fail closed over actual mock HTTP
+      ---
+      duration_ms: 2.90678
+      type: 'test'
+      location: '/path/to/workspace/agent-vault-connector/dist/tests/acceptance.test.js:246:17'
+      failureType: 'testCodeFailure'
+      error: |-
+        Expected values to be strictly equal:
+        
+        400 !== 200
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: 200
+      actual: 400
+      operator: 'strictEqual'
+      stack: |-
+        TestContext.<anonymous> (file:///path/to/workspace/agent-vault-connector/dist/tests/acceptance.test.js:248:24)
+        process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async TestContext.<anonymous> (file:///path/to/workspace/agent-vault-connector/dist/tests/acceptance.test.js:246:9)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+      ...
+    # Subtest: ciphertext tampering denies real MCP operation
+    not ok 10 - ciphertext tampering denies real MCP operation
+      ---
+      duration_ms: 0.70214
+      type: 'test'
+      location: '/path/to/workspace/agent-vault-connector/dist/tests/acceptance.test.js:253:17'
+      failureType: 'testCodeFailure'
+      error: "Cannot read properties of undefined (reading 'encrypted')"
+      code: 'ERR_TEST_FAILURE'
+      name: 'TypeError'
+      stack: |-
+        TestContext.<anonymous> (file:///path/to/workspace/agent-vault-connector/dist/tests/acceptance.test.js:255:98)
+        Test.runInAsyncScope (node:async_hooks:214:14)
+        Test.run (node:internal/test_runner/test:1047:25)
+        Test.start (node:internal/test_runner/test:944:17)
+        TestContext.test (node:internal/test_runner/test:373:20)
+        TestContext.<anonymous> (file:///path/to/workspace/agent-vault-connector/dist/tests/acceptance.test.js:253:17)
+        process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+      ...
+    # Subtest: lock and restart deny MCP until new human unlock; delete invalidates
+    not ok 11 - lock and restart deny MCP until new human unlock; delete invalidates
+      ---
+      duration_ms: 963.760862
+      type: 'test'
+      location: '/path/to/workspace/agent-vault-connector/dist/tests/acceptance.test.js:269:17'
+      failureType: 'testCodeFailure'
+      error: |-
+        The expression evaluated to a falsy value:
+        
+          assert(!(await call('execute_operation', operationArgs(id))).isError)
+        
+      code: 'ERR_ASSERTION'
+      name: 'AssertionError'
+      expected: true
+      actual: false
+      operator: '=='
+      stack: |-
+        TestContext.<anonymous> (file:///path/to/workspace/agent-vault-connector/dist/tests/acceptance.test.js:275:13)
+        process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async TestContext.<anonymous> (file:///path/to/workspace/agent-vault-connector/dist/tests/acceptance.test.js:269:9)
+        async Test.run (node:internal/test_runner/test:1054:7)
+        async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+      ...
+    # Subtest: real Chromium UI unlock/create/replace/delete/lock and XSS-safe label
+    not ok 12 - real Chromium UI unlock/create/replace/delete/lock and XSS-safe label
+      ---
+      duration_ms: 7333.535873
+      type: 'test'
+      location: '/path/to/workspace/agent-vault-connector/dist/tests/acceptance.test.js:289:17'
+      failureType: 'testCodeFailure'
+      error: |-
+        browserType.launch: Target page, context or browser has been closed
+        Browser logs:
+        
+        <launching> /usr/bin/chromium --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-edgeupdater --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,BlockOriginHeaderModificationOnRedirect,AvoidCorsURLLoaderRestartOnRedirect,Translate,AutoDeElevate,OptimizationHints,NetworkTimeServiceQuerying,AimEnabled,msForceBrowserSignIn,msEdgeUpdateLaunchServicesPreferredVersion --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --disable-updater-scheduler --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --no-sandbox --disable-dev-shm-usage --user-data-dir=/path/to/home/.hermes/profiles/developer/cache/scratch/agent-connector-review-8lnj9xrn/tmp/playwright_chromiumdev_profile-1GmrMA --remote-debugging-pipe --no-startup-window
+        <launched> pid=47254
+        [pid=47254][err] [47254:47254:1101/122936.430511:FATAL:chrome/browser/process_singleton_posix.cc:313] Socket path too long: /path/to/home/.hermes/profiles/developer/cache/scratch/agent-connector-review-8lnj9xrn/tmp/agent-vault-acceptance-CJxXFb/org.chromium.Chromium.kvLROI/SingletonSocket.
+        [pid=47254][err] [1101/122936.530358:ERROR:third_party/crashpad/crashpad/util/file/file_io_posix.cc:145] open /sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq: No such file or directory (2)
+        [pid=47254][err] [1101/122936.556978:ERROR:third_party/crashpad/crashpad/util/file/file_io_posix.cc:145] open /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq: No such file or directory (2)
+        Call log:
+          - <launching> /usr/bin/chromium --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-edgeupdater --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,BlockOriginHeaderModificationOnRedirect,AvoidCorsURLLoaderRestartOnRedirect,Translate,AutoDeElevate,OptimizationHints,NetworkTimeServiceQuerying,AimEnabled,msForceBrowserSignIn,msEdgeUpdateLaunchServicesPreferredVersion --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --disable-updater-scheduler --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --no-sandbox --disable-dev-shm-usage --user-data-dir=/path/to/home/.hermes/profiles/developer/cache/scratch/agent-connector-review-8lnj9xrn/tmp/playwright_chromiumdev_profile-1GmrMA --remote-debugging-pipe --no-startup-window
+          - <launched> pid=47254
+          - [pid=47254][err] [47254:47254:1101/122936.430511:FATAL:chrome/browser/process_singleton_posix.cc:313] Socket path too long: /path/to/home/.hermes/profiles/developer/cache/scratch/agent-connector-review-8lnj9xrn/tmp/agent-vault-acceptance-CJxXFb/org.chromium.Chromium.kvLROI/SingletonSocket.
+          - [pid=47254][err] [1101/122936.530358:ERROR:third_party/crashpad/crashpad/util/file/file_io_posix.cc:145] open /sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq: No such file or directory (2)
+          - [pid=47254][err] [1101/122936.556978:ERROR:third_party/crashpad/crashpad/util/file/file_io_posix.cc:145] open /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq: No such file or directory (2)
+          - [pid=47254] <gracefully close start>
+          - [pid=47254] <kill>
+          - [pid=47254] <will force kill>
+          - [pid=47254] <process did exit: exitCode=null, signal=SIGABRT>
+          - [pid=47254] starting temporary directories cleanup
+          - [pid=47254] finished temporary directories cleanup
+          - [pid=47254] <gracefully close end>
+        
+      code: 'ERR_TEST_FAILURE'
+      stack: |-
+        TestContext.<anonymous> (/path/to/workspace/agent-vault-connector/dist/tests/acceptance.test.js:291:44)
+        async TestContext.<anonymous> (/path/to/workspace/agent-vault-connector/dist/tests/acceptance.test.js:289:9)
+      ...
+    # Subtest: five bad unlocks lock active vault; cooldown persists across restart
+    ok 13 - five bad unlocks lock active vault; cooldown persists across restart
+      ---
+      duration_ms: 2731.434537
+      type: 'test'
+      ...
+    # Subtest: database, sidecars, logs, MCP output contain no synthetic plaintext tokens
+    ok 14 - database, sidecars, logs, MCP output contain no synthetic plaintext tokens
+      ---
+      duration_ms: 0.6002
+      type: 'test'
+      ...
+    1..14
+not ok 1 - real management HTTP → official SDK stdio MCP → local mock acceptance
+  ---
+  duration_ms: 15557.805933
+  type: 'test'
+  location: '/path/to/workspace/agent-vault-connector/dist/tests/acceptance.test.js:60:1'
+  failureType: 'subtestsFailed'
+  error: '7 subtests failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# Subtest: AES-GCM random nonces, scrypt, tamper and authenticated context
+ok 2 - AES-GCM random nonces, scrypt, tamper and authenticated context
+  ---
+  duration_ms: 60.821766
+  type: 'test'
+  ...
+# Subtest: outbound policy rejects private/reserved IPv4 and IPv6 and unsafe origins without network
+ok 3 - outbound policy rejects private/reserved IPv4 and IPv6 and unsafe origins without network
+  ---
+  duration_ms: 6.75342
+  type: 'test'
+  ...
+# Subtest: secret scrubber removes nested values and object keys
+ok 4 - secret scrubber removes nested values and object keys
+  ---
+  duration_ms: 0.3395
+  type: 'test'
+  ...
+# Subtest: init refuses overwrite; files enforce modes, ownership and symlink rejection
+ok 5 - init refuses overwrite; files enforce modes, ownership and symlink rejection
+  ---
+  duration_ms: 63.486016
+  type: 'test'
+  ...
+# Subtest: lock zeroes retained master key buffer and unlock failures persist across restarts
+ok 6 - lock zeroes retained master key buffer and unlock failures persist across restarts
+  ---
+  duration_ms: 427.055414
+  type: 'test'
+  ...
+# Subtest: bridge requires exact loopback server origin
+ok 7 - bridge requires exact loopback server origin
+  ---
+  duration_ms: 0.41333
+  type: 'test'
+  ...
+1..7
+# tests 21
+# suites 0
+# pass 13
+# fail 8
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 18077.380993

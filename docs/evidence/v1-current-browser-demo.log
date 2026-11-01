@@ -1,0 +1,5 @@
+Command: /usr/local/bin/node dist/src/browser-demo-run.js
+Started: 2026-11-01T05:42:29.759Z
+{"chromium":"154.0.8037.57","fill":"filled","submissions_after_fill":0,"separately_approved_submit":"succeeded","accepted_submissions":1,"host_session_reused":true,"synthetic_only":true,"temporary_vault_removed_on_exit":true}
+
+Exit code: 0

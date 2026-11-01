@@ -1,0 +1,89 @@
+TAP version 13
+# Subtest: unconfigured browser product reports unsupported and never creates a fake session
+ok 1 - unconfigured browser product reports unsupported and never creates a fake session
+  ---
+  duration_ms: 221.787757
+  type: 'test'
+  ...
+# Subtest: real product vault and Chromium coordinate manager-only fill and separate submit; fixed status reuses the retained context
+ok 2 - real product vault and Chromium coordinate manager-only fill and separate submit; fixed status reuses the retained context
+  ---
+  duration_ms: 900.521016
+  type: 'test'
+  ...
+# Subtest: product requests reject arbitrary targets, impersonation and executable input
+ok 3 - product requests reject arbitrary targets, impersonation and executable input
+  ---
+  duration_ms: 681.56318
+  type: 'test'
+  ...
+# Subtest: pending cards bind original record status, handle TTL, approval TTL and epoch
+    # Subtest: status changes invalidate pending cards before management can approve
+    ok 1 - status changes invalidate pending cards before management can approve
+      ---
+      duration_ms: 227.110876
+      type: 'test'
+      ...
+    # Subtest: approval expires without renewing the document handle
+    ok 2 - approval expires without renewing the document handle
+      ---
+      duration_ms: 238.861806
+      type: 'test'
+      ...
+    # Subtest: five-minute handle expires exactly
+    ok 3 - five-minute handle expires exactly
+      ---
+      duration_ms: 241.519946
+      type: 'test'
+      ...
+    # Subtest: lock and re-unlock invalidate old approvals and retained contexts
+    ok 4 - lock and re-unlock invalidate old approvals and retained contexts
+      ---
+      duration_ms: 365.554738
+      type: 'test'
+      ...
+    1..4
+ok 4 - pending cards bind original record status, handle TTL, approval TTL and epoch
+  ---
+  duration_ms: 1501.34897
+  type: 'test'
+  ...
+# Subtest: submit unknown result remains replayable after full product and vault restart without another dispatch
+ok 5 - submit unknown result remains replayable after full product and vault restart without another dispatch
+  ---
+  duration_ms: 1270.798235
+  type: 'test'
+  ...
+# Subtest: actual server browser routes bind execution credentials, manager CSRF, separate approvals and lock invalidation
+ok 6 - actual server browser routes bind execution credentials, manager CSRF, separate approvals and lock invalidation
+  ---
+  duration_ms: 989.575251
+  type: 'test'
+  ...
+# Subtest: safe host status rejects a same-origin replacement document and its prior approval
+ok 7 - safe host status rejects a same-origin replacement document and its prior approval
+  ---
+  duration_ms: 693.926808
+  type: 'test'
+  ...
+# Subtest: management S0/S1/S2, one admin, epoch cookie/CSRF rotation and execution idle expiry
+ok 8 - management S0/S1/S2, one admin, epoch cookie/CSRF rotation and execution idle expiry
+  ---
+  duration_ms: 614.983583
+  type: 'test'
+  ...
+# Subtest: manual drafts require exact confirmation and cancellation; record/status CAS; no direct-save route
+ok 9 - manual drafts require exact confirmation and cancellation; record/status CAS; no direct-save route
+  ---
+  duration_ms: 328.359481
+  type: 'test'
+  ...
+1..9
+# tests 13
+# suites 0
+# pass 13
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 7895.134299

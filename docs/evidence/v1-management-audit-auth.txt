@@ -1,0 +1,22 @@
+TAP version 13
+# Subtest: management S0/S1/S2, one admin, epoch cookie/CSRF rotation and execution idle expiry
+ok 1 - management S0/S1/S2, one admin, epoch cookie/CSRF rotation and execution idle expiry
+  ---
+  duration_ms: 589.042785
+  type: 'test'
+  ...
+# Subtest: manual drafts require exact confirmation and cancellation; record/status CAS; no direct-save route
+ok 2 - manual drafts require exact confirmation and cancellation; record/status CAS; no direct-save route
+  ---
+  duration_ms: 304.030562
+  type: 'test'
+  ...
+1..2
+# tests 2
+# suites 0
+# pass 2
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1015.70337

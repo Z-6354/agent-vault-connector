@@ -1,0 +1,13 @@
+
+> agent-vault-connector@0.1.0 acceptance
+> npm run build && npm test
+
+
+> agent-vault-connector@0.1.0 build
+> tsc && node scripts/copy-ui.mjs
+
+
+> agent-vault-connector@0.1.0 test
+> node --test --test-concurrency=1 dist/tests/*.test.js
+
+TAP version 13

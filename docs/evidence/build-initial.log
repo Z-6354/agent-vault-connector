@@ -1,0 +1,13 @@
+
+> agent-vault-connector@0.1.0 build
+> tsc && node scripts/copy-ui.mjs
+
+src/server.ts(89,20): error TS18046: 'error' is of type 'unknown'.
+src/server.ts(89,40): error TS18046: 'error' is of type 'unknown'.
+src/server.ts(89,67): error TS18046: 'error' is of type 'unknown'.
+src/server.ts(89,92): error TS18046: 'error' is of type 'unknown'.
+npm notice
+npm notice New major version of npm available! 10.9.9 -> 12.2.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+npm notice To update run: npm install -g npm@12.2.1
+npm notice

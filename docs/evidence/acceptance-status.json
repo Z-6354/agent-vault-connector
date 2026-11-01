@@ -1,0 +1,16 @@
+{
+  "command": [
+    "npm",
+    "run",
+    "acceptance"
+  ],
+  "environment": {
+    "PATH": "/usr/local/bin:/usr/bin:/bin",
+    "HOME": "/path/to/home/.hermes/profiles/developer/cache/scratch/agent-connector-review-8lnj9xrn/home",
+    "TMPDIR": "/path/to/home/.hermes/profiles/developer/cache/scratch/agent-connector-review-8lnj9xrn/tmp",
+    "npm_config_userconfig": "/path/to/home/.hermes/profiles/developer/cache/scratch/agent-connector-review-8lnj9xrn/empty-user.npmrc",
+    "npm_config_globalconfig": "/path/to/home/.hermes/profiles/developer/cache/scratch/agent-connector-review-8lnj9xrn/empty-global.npmrc"
+  },
+  "exit_code": 1,
+  "seconds": 20.23
+}

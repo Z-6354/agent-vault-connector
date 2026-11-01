@@ -1,0 +1,5 @@
+Command: /usr/local/bin/node scripts/v1-app-smoke.mjs
+Started: 2026-11-01T05:42:27.930Z
+Independent built CLI + Chromium smoke passed.
+
+Exit code: 0

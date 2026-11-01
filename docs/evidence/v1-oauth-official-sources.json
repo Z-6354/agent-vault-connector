@@ -1,0 +1,270 @@
+{
+  "checked_at": "2026-11-01T05:21:58.034130+00:00",
+  "purpose": "Read-only public official requirements verification. No provider runtime/account/client credentials used.",
+  "sources": [
+    {
+      "name": "github-oauth-app",
+      "url": "https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps",
+      "http_status": 200,
+      "document_sha256": "68dd544eef8fd46014b69ea1629246b67de0ba2e77449283ee6c4d6db1c8efea",
+      "excerpts": [
+        {
+          "needle": "offline_access",
+          "found": true,
+          "text": "ut support for expiring tokens, you can opt in to receive an expiring token and a refresh token for an individual sign-in by requesting the offline_access scope in addition to your other scopes. When you request the offline_access scope, you will receive an expiring access token and a refresh token even if your app is not configured to use expiring tokens. If your app supports both GitHub Enterprise Server and GitHub.com, you should be prepared for the offline_access scope to have no effect, because the GitHub Enterprise Server instance may not yet support expiring tokens. In this case, you will receive a non-expiring token and no refresh token, so your app should not assume that a refresh token is always returned. Requiring expiring tokens for your app Once you have updated your"
+        },
+        {
+          "needle": "six months",
+          "found": true,
+          "text": "plication flow and the device flow support expiring tokens. The access token expires after eight hours, and the refresh token expires after six months without use. You can use the refresh token to generate a new access token and a new refresh token. For more information, see Refreshing an access token with a refresh token . Opting in to expiring tokens at runtime To test and gradually roll out support for expiring tokens, you can opt in to receive an expiring token and a refresh token for an individual sign-in by requesting the offline_access scope in addition to your other scopes. When you request the offline_access scope, you will receive an expiring access token and a refresh token even if your app is not configured to use expiring tokens. If your app supports both GitHub Ente"
+        },
+        {
+          "needle": "S256",
+          "found": true,
+          "text": "recommended Used to secure the authentication flow with PKCE (Proof Key for Code Exchange). Required if code_challenge is included. Must be S256 - the plain code challenge method is not supported. allow_signup string Optional Whether or not unauthenticated users will be offered an option to sign up for GitHub during the OAuth flow. The default is true . Use false when a policy prohibits signups. prompt string Optional Forces the account picker to appear if set to select_account . The account picker will also appear if the application has a non-HTTP redirect URI or if the user has multiple accounts signed in. CORS pre-flight requests (OPTIONS) are not supported at this time. 2. Users are redirected back to your site by GitHub If the user accepts your request, GitHub redirects back"
+        },
+        {
+          "needle": "code_verifier",
+          "found": true,
+          "text": "horization. We can use this to match against the URI originally provided when the code was issued, to prevent attacks against your service. code_verifier string Strongly recommended Used to secure the authentication flow with PKCE (Proof Key for Code Exchange). Required if code_challenge was sent during the user authorization. Must be the original value used to generate the code_challenge in the authorization request. This can be stored in a cookie alongside the state parameter or in a session variable during authentication, depending on your application architecture. By default, the response takes the following form: access_token=gho_16C7e42F292c6912E7710c838347Ae178B4a &amp;scope=repo%2Cgist &amp;token_type=bearer You can also receive the response in different formats if you pr"
+        },
+        {
+          "needle": "refresh_token_expires_in",
+          "found": true,
+          "text": "ing access tokens, or if you requested the offline_access scope, the response also includes a refresh_token , along with the expires_in and refresh_token_expires_in values that indicate when each token expires (as seconds from the current time). For more information, see Expiring access tokens . By default, the response takes the following form: access_token=gho_16C7e42F292c6912E7710c838347Ae178B4a &amp;expires_in=28800 &amp;refresh_token=ghr_1B4a2e77838347a7E420ce178F2E7c6912E169246c34E1ccbF66C46812d16D5B1A9Dc86A1498 &amp;refresh_token_expires_in=15897600 &amp;scope=repo%2Cgist &amp;token_type=bearer 3. Use the access token to access the API The access token allows you to make requests to the API on a behalf of a user. Authorization: Bearer OAUTH-TOKEN GET https://api.github.com"
+        },
+        {
+          "needle": "August 3, 2026",
+          "found": true,
+          "text": "callback URL. For more information, see the OAuth 2.0 Security Best Current Practice . Apps that had a single callback URL enabled prior to August 3, 2026 have wildcard matching enabled for that callback URL. This preserves the redirect behavior that existed before wildcard matching became a configurable setting, and is why all OAuth apps and some GitHub Apps created before that date have wildcard matching enabled. If your app does not need wildcard matching, we recommend that you disable it. Loopback redirect urls The optional redirect_uri parameter can also be used for loopback URLs, which is useful for native applications running on a desktop computer. If the application specifies a loopback URL and a port, then after authorizing the application users will be redirected to the"
+        },
+        {
+          "needle": "The scopes on the new access token",
+          "found": true,
+          "text": "178F2E7c6912E169246c34E1ccbF66C46812d16D5B1A9Dc86A1498 &amp;refresh_token_expires_in=15897600 &amp;scope=repo%2Cgist &amp;token_type=bearer The scopes on the new access token will match the scopes of the previous token. You cannot provide a scope parameter during token refresh in order to change the access of the resulting token. If the refresh token that you specified is invalid or expired, you will receive a bad_refresh_token error. To resolve this error, send the user through the web application flow or device flow again to get a new access token and refresh token. Non-Web application flow Non-web authentication is available for limited situations like testing. If you need to, you can use Basic Authentication to create a personal access token using your personal access tokens "
+        }
+      ]
+    },
+    {
+      "name": "github-grant-revoke",
+      "url": "https://docs.github.com/en/rest/apps/oauth-applications",
+      "http_status": 200,
+      "document_sha256": "d4016a2d4dbcfa711bb5b7970eeda0a81075231075a03081c49aae00b335cb58",
+      "excerpts": [
+        {
+          "needle": "/applications/{client_id}/grant",
+          "found": true,
+          "text": " Terms Privacy Status Pricing {\"props\":{\"pageProps\":{\"restOperations\":[{\"serverUrl\":\"https://api.github.com\",\"verb\":\"delete\",\"requestPath\":\"/applications/{client_id}/grant\",\"title\":\"Delete an app authorization\",\"category\":\"apps\",\"subcategory\":\"oauth-applications\",\"parameters\":[{\"name\":\"client_id\",\"in\":\"path\",\"required\":true,\"description\":\"\\u003cp\\u003eThe client ID of the GitHub app.\\u003c/p\\u003e\",\"schema\":{\"type\":\"string\"}}],\"bodyParameters\":[{\"type\":\"string\",\"name\":\"access_token\",\"description\":\"\\u003cp\\u003eThe OAuth access token used to authenticate to the GitHub API.\\u003c/p\\u003e\",\"isRequired\":true}],\"descriptionHTML\":\"\\u003cp\\u003eOAuth and GitHub application owners can revoke a grant for their application and a specific user. You must provide a valid OAuth \\u003ccode\\u003"
+        },
+        {
+          "needle": "204",
+          "found": true,
+          "text": "oken used to authenticate to the GitHub API. HTTP response status codes for &quot;Delete an app authorization&quot; Status code Description 204 No Content 422 Validation failed, or the endpoint has been spammed. Code samples for &quot;Delete an app authorization&quot; Request example delete /applications /{client_ id} /grant cURL JavaScript Copy to clipboard curl request example curl -L \\ -X DELETE \\ -H &quot;Accept: application/vnd.github+json&quot; \\ -u &quot;&lt;YOUR_CLIENT_ID&gt;:&lt;YOUR_CLIENT_SECRET&gt;&quot; \\ -H &quot;X-GitHub-Api-Version: 2026-03-10&quot; \\ https://api.github.com/applications/Iv1.8a61f9b3a7aba766/grant \\ -d &#x27;{&quot;access_token&quot;:&quot;e72e16c7e42f292c6912e7710c838347ae178b4a&quot;}&#x27; Response Status: 204 Check a token OAuth applications an"
+        },
+        {
+          "needle": "client secret",
+          "found": false,
+          "text": null
+        },
+        {
+          "needle": "2026-03-10",
+          "found": true,
+          "text": "tent GitHub Docs Search or ask Copilot / Menu Collapse sidebar Expand sidebar Home REST API Apps OAuth authorizations REST API API Version: 2026-03-10 (latest) Quickstart About the REST API About the REST API Comparing GitHub&#x27;s APIs API Versions Breaking changes OpenAPI description Using the REST API Getting started Rate limits Pagination Libraries Best practices Troubleshooting Timezones CORS and JSONP Issue event types GitHub event types Authentication Authenticating Keeping API credentials secure Endpoints for GitHub App installation tokens Endpoints for GitHub App user tokens Endpoints for fine-grained PATs Permissions for GitHub Apps Permissions for fine-grained PATs Guides Script with JavaScript Script with Ruby Discover resources for a user Delivering deployments Rend"
+        }
+      ]
+    },
+    {
+      "name": "github-identity",
+      "url": "https://docs.github.com/en/rest/users/users#get-the-authenticated-user",
+      "http_status": 200,
+      "document_sha256": "b092a16c105f02017101cc5b0bcf2bc99d0f576bf3e643eaf5d6ec0293a64080",
+      "excerpts": [
+        {
+          "needle": "Get the authenticated user",
+          "found": true,
+          "text": "isories Teams Members Teams Users Attestations Blocking users Emails Followers GPG keys Git SSH keys Social accounts SSH signing keys Users Get the authenticated user Update the authenticated user Get a user using their ID List users Get a user Get contextual information for a user In this article The REST API is now versioned. For more information, see &quot; About API versioning .&quot; REST API endpoints for users Use the REST API to get public and private information about authenticated users. Get the authenticated user OAuth app tokens and personal access tokens (classic) need the read:user scope, or the broader user scope, for this endpoint to return the private user response. The private user response includes additional fields such as private_gists , total_private_repos ,"
+        },
+        {
+          "needle": "read:user",
+          "found": true,
+          "text": "nd private information about authenticated users. Get the authenticated user OAuth app tokens and personal access tokens (classic) need the read:user scope, or the broader user scope, for this endpoint to return the private user response. The private user response includes additional fields such as private_gists , total_private_repos , owned_private_repos , disk_usage , collaborators , and two_factor_authentication . Tokens without these scopes receive the public user response. The private and public user response types are unrelated to the private profile setting. A token without scopes still authenticates as the token&#x27;s owner, so values subject to private profile visibility, such as followers and following , may differ from an unauthenticated response. Fine-grained access "
+        },
+        {
+          "needle": "id",
+          "found": true,
+          "text": "dListener)q.addListener(apply); } }catch(e){} })(); Skip to main content Skip to content GitHub Docs Search or ask Copilot / Menu Collapse sidebar Expand sidebar Home REST API Users Users REST API API Version: 2026-03-10 (latest) Quickstart About the REST API About the REST API Comparing GitHub&#x27;s APIs API Versions Breaking changes OpenAPI description Using the REST API Getting started Rate limits Pagination Libraries Best practices Troubleshooting Timezones CORS and JSONP Issue event types GitHub event types Authentication Authenticating Keeping API credentials secure Endpoints for GitHub App installation tokens Endpoints for GitHub App user tokens Endpoints for fine-grained PATs Permissions for GitHub Apps Permissions for fine-grained PATs Guides Script with JavaScript Scri"
+        }
+      ]
+    },
+    {
+      "name": "google-web-server",
+      "url": "https://developers.google.com/identity/protocols/oauth2/web-server",
+      "http_status": 200,
+      "document_sha256": "f0b4adc5c622a87795d2e6922359276ee66053af6c37d5b68833e95758da2106",
+      "excerpts": [
+        {
+          "needle": "must exactly match",
+          "found": true,
+          "text": " page . redirect_uri Required Determines where the API server redirects the user after the user completes the authorization flow. The value must exactly match one of the authorized redirect URIs for the OAuth 2.0 client, which you configured in your client's Cloud Console Clients page . If this value doesn't match an authorized redirect URI for the provided client_id you will get a redirect_uri_mismatch error. Note that the http or https scheme, case, and trailing slash (' / ') must all match. response_type Required Determines whether the Google OAuth 2.0 endpoint returns an authorization code. Set the parameter value to code for web server applications. scope Required A space-delimited list of scopes that identify the resources that your application could access on the user's be"
+        },
+        {
+          "needle": "refresh_token_expires_in",
+          "found": true,
+          "text": "d is only present in this response if you set the access_type parameter to offline in the initial request to Google's authorization server. refresh_token_expires_in The remaining lifetime of the refresh token in seconds. This value is only set when the user grants time-based access . scope The scopes of access granted by the access_token expressed as a list of space-delimited, case-sensitive strings. token_type The type of token returned. This value is always Bearer , even when DPoP is used. Important: Your application should store both tokens in a secure, long-lived location that is accessible between different invocations of your application. The refresh token enables your application to obtain a new access token if the one that you have expires. As such, if your application lo"
+        },
+        {
+          "needle": "access_type",
+          "found": true,
+          "text": "URL to your application's auth endpoint, which will handle the response from Google's OAuth 2.0 server. Finally, the code sets the optional access_type and include_granted_scopes parameters. For example, this code requests read-only, offline access to a user's Google Drive metadata and Calendar events: use Google\\Client; $client = new Client(); // Required, call the setAuthConfig function to load authorization credentials from // client_secret.json file. $client->setAuthConfig('client_secret.json'); // Required, to set the scope value, call the addScope function $client->addScope([Google\\Service\\Drive::DRIVE_METADATA_READONLY, Google\\Service\\Calendar::CALENDAR_READONLY]); // Required, call the setRedirectUri function to specify a valid redirect URI for the // provided client_id $"
+        },
+        {
+          "needle": "only returned",
+          "found": true,
+          "text": "_scopes : true , // Include the state parameter to reduce the risk of CSRF attacks. state : state }); Important Note - The refresh_token is only returned on the first authorization. More details here . HTTP/REST Google's OAuth 2.0 endpoint is at https://accounts.google.com/o/oauth2/v2/auth . This endpoint is accessible only over HTTPS. Plain HTTP connections are refused. The Google authorization server supports the following query string parameters for web server applications: Parameters client_id Required The client ID for your application. You can find this value in the Cloud Console Clients page . redirect_uri Required Determines where the API server redirects the user after the user completes the authorization flow. The value must exactly match one of the authorized redirect "
+        },
+        {
+          "needle": "all OAuth 2.0 scopes",
+          "found": true,
+          "text": "application are removed. PHP To programmatically revoke a token, call revokeToken() : $client->revokeToken(); Key Point: Revocation removes all OAuth 2.0 scopes previously granted to a project, invalidating any issued access or refresh tokens for all clients registered under that project. Python To programmatically revoke a token, make a request to https://oauth2.googleapis.com/revoke that includes the token as a parameter and sets the Content-Type header: requests . post ( 'https://oauth2.googleapis.com/revoke' , params = { 'token' : credentials . token }, headers = { 'content-type' : 'application/x-www-form-urlencoded' }) Key Point: Revocation removes all OAuth 2.0 scopes previously granted to a project, invalidating any issued access or refresh tokens for all clients registere"
+        },
+        {
+          "needle": "200",
+          "found": true,
+          "text": "sing OpenSSL directly, you must convert the default ASN.1 DER-encoded signature to this raw format. A successful exchange is indicated by a 200 OK response containing the tokens. If a valid DPoP proof is used during the exchange, the refresh token Google returns will be DPoP-bound to your key, but access tokens won't be DPoP bound. Access tokens will retain the token_type of Bearer rather than DPoP . Additionally, Google returns a DPoP-Nonce HTTP header in the response. Your client must cache this nonce and include it in the nonce claim of the DPoP proof in subsequent requests (such as when exchanging a refresh token for a new access token, or when calling DPoP-protected APIs). By using this early-issued nonce, you can avoid an extra round-trip failure ( use_dpop_nonce ) on your "
+        }
+      ]
+    },
+    {
+      "name": "google-pkce-syntax-desktop",
+      "url": "https://developers.google.com/identity/protocols/oauth2/native-app",
+      "http_status": 200,
+      "document_sha256": "066911e6a19652408f022c739e5c122264fdbd762df55d016c81daaa5e95475e",
+      "excerpts": [
+        {
+          "needle": "code_verifier",
+          "found": true,
+          "text": "ransformed value, called \"code_challenge\", is sent to the authorization server to obtain the authorization code. Create the code verifier A code_verifier is a high-entropy cryptographic random string using the unreserved characters [A-Z] / [a-z] / [0-9] / \"-\" / \".\" / \"_\" / \"~\", with a minimum length of 43 characters and a maximum length of 128 characters. The code verifier should have enough entropy to make it impractical to guess the value. Create the code challenge Two methods of creating the code challenge are supported. Code Challenge Generation Methods S256 (recommended) The code challenge is the Base64URL (with no padding) encoded SHA256 hash of the code verifier. code_challenge = BASE64URL-ENCODE(SHA256(ASCII( code_verifier ))) plain The code challenge is the same value as"
+        },
+        {
+          "needle": "S256",
+          "found": true,
+          "text": "l to guess the value. Create the code challenge Two methods of creating the code challenge are supported. Code Challenge Generation Methods S256 (recommended) The code challenge is the Base64URL (with no padding) encoded SHA256 hash of the code verifier. code_challenge = BASE64URL-ENCODE(SHA256(ASCII( code_verifier ))) plain The code challenge is the same value as the code verifier generated above. code_challenge = code_verifier Step 2: Send a request to Google's OAuth 2.0 server To obtain user authorization, send a request to Google's authorization server at https://accounts.google.com/o/oauth2/v2/auth . This endpoint handles active session lookup, authenticates the user, and obtains user consent. The endpoint is only accessible over SSL, and it refuses HTTP (non-SSL) connection"
+        },
+        {
+          "needle": "43",
+          "found": true,
+          "text": "entropy cryptographic random string using the unreserved characters [A-Z] / [a-z] / [0-9] / \"-\" / \".\" / \"_\" / \"~\", with a minimum length of 43 characters and a maximum length of 128 characters. The code verifier should have enough entropy to make it impractical to guess the value. Create the code challenge Two methods of creating the code challenge are supported. Code Challenge Generation Methods S256 (recommended) The code challenge is the Base64URL (with no padding) encoded SHA256 hash of the code verifier. code_challenge = BASE64URL-ENCODE(SHA256(ASCII( code_verifier ))) plain The code challenge is the same value as the code verifier generated above. code_challenge = code_verifier Step 2: Send a request to Google's OAuth 2.0 server To obtain user authorization, send a request "
+        },
+        {
+          "needle": "128",
+          "found": true,
+          "text": "ing the unreserved characters [A-Z] / [a-z] / [0-9] / \"-\" / \".\" / \"_\" / \"~\", with a minimum length of 43 characters and a maximum length of 128 characters. The code verifier should have enough entropy to make it impractical to guess the value. Create the code challenge Two methods of creating the code challenge are supported. Code Challenge Generation Methods S256 (recommended) The code challenge is the Base64URL (with no padding) encoded SHA256 hash of the code verifier. code_challenge = BASE64URL-ENCODE(SHA256(ASCII( code_verifier ))) plain The code challenge is the same value as the code verifier generated above. code_challenge = code_verifier Step 2: Send a request to Google's OAuth 2.0 server To obtain user authorization, send a request to Google's authorization server at ht"
+        }
+      ]
+    },
+    {
+      "name": "google-expiration",
+      "url": "https://developers.google.com/identity/protocols/oauth2#expiration",
+      "http_status": 200,
+      "document_sha256": "6bcef60a3c935cdf1c83b49ae5779d2647a6e56d91c61f7c1fb431cc43d79fe7",
+      "excerpts": [
+        {
+          "needle": "seven days",
+          "found": false,
+          "text": null
+        },
+        {
+          "needle": "six months",
+          "found": true,
+          "text": "might stop working for one of these reasons: shield_locked The user has revoked your app's access . The refresh token has not been used for six months. The user changed passwords and the refresh token contains Gmail scopes. The user account has exceeded a maximum number of granted (live) refresh tokens. The user granted time-based access to your app and the access expired. If an admin set any of the services requested in your app's scopes to Restricted (the error is admin_policy_enforced ). cloud_lock For Google Cloud Platform APIs - the session length set by the admin could have been exceeded. A Google Cloud Platform project with an OAuth consent screen configured for an external user type and a publishing status of &quot;Testing&quot; is issued a refresh token expiring in 7 day"
+        },
+        {
+          "needle": "100 refresh tokens",
+          "found": true,
+          "text": " profile (through the userinfo.email, userinfo.profile, openid scopes, or their OpenID Connect equivalents ). There is currently a limit of 100 refresh tokens per Google Account per OAuth 2.0 client ID. If the limit is reached, creating a new refresh token automatically invalidates the oldest refresh token without warning. This limit does not apply to service accounts . There is also a larger limit on the total number of refresh tokens a user account or service account can have across all clients. Most normal users won&#39;t exceed this limit but a developer&#39;s account used to test an implementation might. If you need to authorize multiple programs, machines, or devices, one workaround is to limit the number of clients that you authorize per Google Account to 15 or 20. If you "
+        },
+        {
+          "needle": "Testing",
+          "found": true,
+          "text": "xceeded. A Google Cloud Platform project with an OAuth consent screen configured for an external user type and a publishing status of &quot;Testing&quot; is issued a refresh token expiring in 7 days, unless the only OAuth scopes requested are a subset of name, email address, and user profile (through the userinfo.email, userinfo.profile, openid scopes, or their OpenID Connect equivalents ). There is currently a limit of 100 refresh tokens per Google Account per OAuth 2.0 client ID. If the limit is reached, creating a new refresh token automatically invalidates the oldest refresh token without warning. This limit does not apply to service accounts . There is also a larger limit on the total number of refresh tokens a user account or service account can have across all clients. Mos"
+        }
+      ]
+    },
+    {
+      "name": "google-discovery",
+      "url": "https://accounts.google.com/.well-known/openid-configuration",
+      "http_status": 200,
+      "document_sha256": "f86b185fd428f81d7efaa83ec256693b3abedb57ddfcc6a826f5f396b4827f02",
+      "excerpts": [
+        {
+          "needle": "code_challenge_methods_supported",
+          "found": true,
+          "text": "\" ], \"claims_supported\": [ \"aud\", \"email\", \"email_verified\", \"exp\", \"family_name\", \"given_name\", \"iat\", \"iss\", \"name\", \"picture\", \"sub\" ], \"code_challenge_methods_supported\": [ \"plain\", \"S256\" ], \"grant_types_supported\": [ \"authorization_code\", \"refresh_token\", \"urn:ietf:params:oauth:grant-type:device_code\", \"urn:ietf:params:oauth:grant-type:jwt-bearer\" ], \"authorization_response_iss_parameter_supported\": true } "
+        }
+      ],
+      "discovery": {
+        "issuer": "https://accounts.google.com",
+        "authorization_endpoint": "https://accounts.google.com/o/oauth2/v2/auth",
+        "token_endpoint": "https://oauth2.googleapis.com/token",
+        "userinfo_endpoint": "https://openidconnect.googleapis.com/v1/userinfo",
+        "revocation_endpoint": "https://oauth2.googleapis.com/revoke",
+        "code_challenge_methods_supported": [
+          "plain",
+          "S256"
+        ]
+      }
+    },
+    {
+      "name": "google-openid-scope-alias-example",
+      "url": "https://developers.google.com/identity/openid-connect/openid-connect",
+      "http_status": 200,
+      "document_sha256": "b8c5f664e4917638e315940fea9283ba6f1f2e4c0a98b90ddf00d7784f96f1ab",
+      "excerpts": [
+        {
+          "needle": "scope=openid%20email%20https://www.googleapis.com/auth/userinfo.email",
+          "found": true,
+          "text": "round?state= security_token%3D138r5719ru3e1%26url%3Dhttps%3A%2F%2Foa2cb.example.com%2FmyHome &amp;code= 4/P7q7W91a-oMsCeLvIaQm6bTrgtp7 &amp;scope=openid%20email%20https://www.googleapis.com/auth/userinfo.email Per RFC 6749, clients MUST ignore unrecognized response parameters. On the server, you must confirm that the state received from Google matches the session token you created in Step 1 . This round-trip verification helps to verify that the user, not a malicious script, is making the request. The following code demonstrates confirming the session tokens that you created in Step 1: PHP You must download the Google APIs client library for PHP to use this sample. // Ensure that there is no request forgery going on, and that the user // sending us this connect request is the use"
+        },
+        {
+          "needle": "openid email",
+          "found": true,
+          "text": "which in a basic authorization code flow request should be code . (Read more at response_type .) scope , which in a basic request should be openid email . (Read more at scope .) redirect_uri should be the HTTP endpoint on your server that will receive the response from Google. The value must exactly match one of the authorized redirect URIs for the OAuth 2.0 client, which you configured in the Cloud Console Credentials page. If this value doesn&#39;t match an authorized URI, the request will fail with a redirect_uri_mismatch error. state should include the value of the anti-forgery unique session token, as well as any other information needed to recover the context when the user returns to your application, e.g., the starting URL. (Read more at state .) nonce is a random value ge"
+        },
+        {
+          "needle": "profile",
+          "found": true,
+          "text": "taining and validating an ID token, commonly done through a &quot;server&quot; or &quot;implicit&quot; flow. You can obtain additional user profile information and access other Google APIs by including relevant scopes in the authentication request and using the userinfo endpoint with an access token. Google provides a Discovery document at a well-known URI containing configuration details and endpoint URIs for its OpenID Connect service. Google&#39;s OAuth 2.0 APIs can be used for both authentication and authorization. This document describes our OAuth 2.0 implementation for authentication, which conforms to the OpenID Connect specification, and is OpenID Certified . The documentation found in Using OAuth 2.0 to Access Google APIs also applies to this service. If you want to expl"
+        }
+      ]
+    },
+    {
+      "name": "google-oauth2-api-scope-definitions",
+      "url": "https://www.googleapis.com/discovery/v1/apis/oauth2/v2/rest",
+      "http_status": 200,
+      "document_sha256": "4a1d6b68a866302b8ea5ab414b02d7a847b9d9336c4a7485d395041c5e916e16",
+      "excerpts": [
+        {
+          "needle": "https://www.googleapis.com/auth/userinfo.email",
+          "found": true,
+          "text": "\"location\": \"query\" } }, \"auth\": { \"oauth2\": { \"scopes\": { \"openid\": { \"description\": \"Associate you with your personal info on Google\" }, \"https://www.googleapis.com/auth/userinfo.email\": { \"description\": \"See your primary Google Account email address\" }, \"https://www.googleapis.com/auth/userinfo.profile\": { \"description\": \"See your personal info, including any personal info you've made publicly available\" } } } }, \"schemas\": { \"Tokeninfo\": { \"id\": \"Tokeninfo\", \"type\": \"object\", \"properties\": { \"audience\": { \"type\": \"string\", \"description\": \"Who is the intended audience for this token. In general the same as issued_to.\" }, \"email\": { \"type\": \"string\", \"description\": \"The email address of the user. Present only if the email scope is present in the request.\" }, \"expires_in\": { \"ty"
+        },
+        {
+          "needle": "https://www.googleapis.com/auth/userinfo.profile",
+          "found": true,
+          "text": "l info on Google\" }, \"https://www.googleapis.com/auth/userinfo.email\": { \"description\": \"See your primary Google Account email address\" }, \"https://www.googleapis.com/auth/userinfo.profile\": { \"description\": \"See your personal info, including any personal info you've made publicly available\" } } } }, \"schemas\": { \"Tokeninfo\": { \"id\": \"Tokeninfo\", \"type\": \"object\", \"properties\": { \"audience\": { \"type\": \"string\", \"description\": \"Who is the intended audience for this token. In general the same as issued_to.\" }, \"email\": { \"type\": \"string\", \"description\": \"The email address of the user. Present only if the email scope is present in the request.\" }, \"expires_in\": { \"type\": \"integer\", \"description\": \"The expiry time of the token, as number of seconds left until expiry.\", \"format\": \"int"
+        }
+      ],
+      "scope_definitions": {
+        "openid": {
+          "description": "Associate you with your personal info on Google"
+        },
+        "https://www.googleapis.com/auth/userinfo.email": {
+          "description": "See your primary Google Account email address"
+        },
+        "https://www.googleapis.com/auth/userinfo.profile": {
+          "description": "See your personal info, including any personal info you've made publicly available"
+        }
+      }
+    }
+  ]
+}

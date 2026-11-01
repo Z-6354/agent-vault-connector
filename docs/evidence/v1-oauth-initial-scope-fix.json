@@ -1,0 +1,51 @@
+{
+  "finding": "P2 initial authorization granted scopes exceed approved ceiling",
+  "changes": [
+    "Callback requires every requested scope and rejects any normalized granted scope outside the approved connection ceiling before identity dispatch or active completion.",
+    "Vault completion independently validates material.grantedScopes against normalized approvedScopes, even with missing or narrower change.scopes, and preserves requested-scope coverage.",
+    "Google documented email/profile URI aliases use existing provider-specific normalization; lookalike aliases do not normalize."
+  ],
+  "regressions": [
+    "GitHub and Google first authorization_code callback rejects scope_expansion, saves no material, stays inactive, dispatches no identity request, and consumes callback state.",
+    "GitHub and Google first callback still rejects missing requested scopes.",
+    "Real SQLite Vault bridge rejects extra material grants with change.scopes present or omitted, leaves encrypted envelope metadata and versions unchanged, and rejects missing requested scopes.",
+    "Vault bridge permits approved Google identity aliases and rejects unapproved profile identity URI and lookalike aliases; returned metadata and audits omit synthetic tokens."
+  ],
+  "constraints": {
+    "synthetic_only": true,
+    "network": "literal loopback HTTP only",
+    "real_credentials_or_configs": false,
+    "external_requests": false,
+    "full_suite_run": false,
+    "acceptance_run": false,
+    "hashes_generated": false,
+    "commits_created": false
+  },
+  "commands": [
+    {
+      "command": "npm run build",
+      "started_at": "2026-11-01T08:02:06.461436+00:00",
+      "finished_at": "2026-11-01T08:02:09.623025+00:00",
+      "exit_code": 0,
+      "result": "passed"
+    },
+    {
+      "command": "node --test --test-concurrency=1 dist/tests/oauth.test.js dist/tests/oauth-vault.test.js",
+      "started_at": "2026-11-01T08:02:09.623118+00:00",
+      "finished_at": "2026-11-01T08:02:11.455001+00:00",
+      "exit_code": 0,
+      "result": "passed",
+      "summary": {
+        "tests": 34,
+        "suites": 0,
+        "pass": 34,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      }
+    }
+  ],
+  "result": "passed",
+  "log": "docs/evidence/v1-oauth-initial-scope-fix.log"
+}

@@ -1,0 +1,124 @@
+TAP version 13
+# Subtest: external reference stays metadata-only even when a grant and trusted host exist
+ok 1 - external reference stays metadata-only even when a grant and trusted host exist
+  ---
+  duration_ms: 6.58844
+  type: 'test'
+  ...
+# Subtest: synthetic loopback formal host authenticates center and reports actual shared upstream identity
+ok 2 - synthetic loopback formal host authenticates center and reports actual shared upstream identity
+  ---
+  duration_ms: 13.430929
+  type: 'test'
+  ...
+# Subtest: delegation requires intersection of local and upstream operations, scopes, audience, resource and endpoint
+ok 3 - delegation requires intersection of local and upstream operations, scopes, audience, resource and endpoint
+  ---
+  duration_ms: 1.45584
+  type: 'test'
+  ...
+# Subtest: missing formal evidence, wrong owner/center/host/upstream identities, expiry and revocation deny without execution
+ok 4 - missing formal evidence, wrong owner/center/host/upstream identities, expiry and revocation deny without execution
+  ---
+  duration_ms: 4.012839
+  type: 'test'
+  ...
+# Subtest: each call verifies current host grant; revoked/unknown identity/signature/unreachable host deny
+ok 5 - each call verifies current host grant; revoked/unknown identity/signature/unreachable host deny
+  ---
+  duration_ms: 5.83371
+  type: 'test'
+  ...
+# Subtest: host rechecks revocation at dispatch, and core epoch/policy are checked again after verification
+ok 6 - host rechecks revocation at dispatch, and core epoch/policy are checked again after verification
+  ---
+  duration_ms: 5.61286
+  type: 'test'
+  ...
+# Subtest: unresponsive host times out before dispatch with no upstream execution
+ok 7 - unresponsive host times out before dispatch with no upstream execution
+  ---
+  duration_ms: 102.611704
+  type: 'test'
+  ...
+# Subtest: synthetic host endpoint cannot be redirected to a nonloopback or arbitrary URL
+ok 8 - synthetic host endpoint cannot be redirected to a nonloopback or arbitrary URL
+  ---
+  duration_ms: 0.42413
+  type: 'test'
+  ...
+# Subtest: optional synthetic draft confirms through real official SDK MCP save_credential exactly once; execution tools absent
+ok 9 - optional synthetic draft confirms through real official SDK MCP save_credential exactly once; execution tools absent
+  ---
+  duration_ms: 219.707167
+  type: 'test'
+  ...
+# Subtest: MCP save denies absent approval, altered payload, revoked session and lock; no secret error output
+ok 10 - MCP save denies absent approval, altered payload, revoked session and lock; no secret error output
+  ---
+  duration_ms: 194.309299
+  type: 'test'
+  ...
+# Subtest: MCP malformed arguments and unknown tool names never echo attacker-supplied secret keys
+ok 11 - MCP malformed arguments and unknown tool names never echo attacker-supplied secret keys
+  ---
+  duration_ms: 189.618808
+  type: 'test'
+  ...
+# Subtest: approved MCP retry returns original redacted result; different payload never rewrites
+ok 12 - approved MCP retry returns original redacted result; different payload never rewrites
+  ---
+  duration_ms: 189.569149
+  type: 'test'
+  ...
+# Subtest: injected synthetic inference creates only memory draft; real core saves exact secret after UI confirmation
+ok 13 - injected synthetic inference creates only memory draft; real core saves exact secret after UI confirmation
+  ---
+  duration_ms: 209.039028
+  type: 'test'
+  ...
+# Subtest: model cannot self-confirm or persist unknown approval fields; secret whitespace is preserved
+ok 14 - model cannot self-confirm or persist unknown approval fields; secret whitespace is preserved
+  ---
+  duration_ms: 382.436937
+  type: 'test'
+  ...
+# Subtest: confirmation checks session/CSRF and core-bound draft version; bad confirmation saves nothing
+ok 15 - confirmation checks session/CSRF and core-bound draft version; bad confirmation saves nothing
+  ---
+  duration_ms: 189.149589
+  type: 'test'
+  ...
+# Subtest: cancel, draft expiry, editing and lock invalidate old memory draft with zero saves
+ok 16 - cancel, draft expiry, editing and lock invalidate old memory draft with zero saves
+  ---
+  duration_ms: 813.419281
+  type: 'test'
+  ...
+# Subtest: inference timeout/cancel/lock ignores late results and creates no core draft or persistent record
+ok 17 - inference timeout/cancel/lock ignores late results and creates no core draft or persistent record
+  ---
+  duration_ms: 628.218053
+  type: 'test'
+  ...
+# Subtest: late synthetic ASR after cancellation never dispatches inference or persists a draft
+ok 18 - late synthetic ASR after cancellation never dispatches inference or persists a draft
+  ---
+  duration_ms: 195.040158
+  type: 'test'
+  ...
+# Subtest: synthetic ASR fixture is explicitly labeled; absent ASR and remote endpoints are refused
+ok 19 - synthetic ASR fixture is explicitly labeled; absent ASR and remote endpoints are refused
+  ---
+  duration_ms: 372.866108
+  type: 'test'
+  ...
+1..19
+# tests 19
+# suites 0
+# pass 19
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3972.640173

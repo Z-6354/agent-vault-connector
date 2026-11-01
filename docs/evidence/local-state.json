@@ -1,0 +1,24 @@
+{
+  "original_files_present": 22,
+  "modified_original_files": [
+    "README.md",
+    "IMPLEMENTATION-SCOPE.md",
+    "AGENT-COMPATIBILITY-SCOPE.md",
+    "src/server.ts",
+    "tests/security.test.ts",
+    "tests/acceptance.test.ts"
+  ],
+  "compatibility_data_rows": 5,
+  "project_dot_tmp_exists": false,
+  "short_task_tmpdir": "/tmp/avc-pv2hbkt3",
+  "short_task_tmpdir_entries": [
+    "node-compile-cache"
+  ],
+  "resolved_versions": {
+    "fastify": "5.12.7",
+    "@modelcontextprotocol/sdk": "1.32.2",
+    "better-sqlite3": "12.11.1",
+    "playwright-core": "1.64.1",
+    "typescript": "5.9.3"
+  }
+}

@@ -1,0 +1,178 @@
+TAP version 13
+# Subtest: OAuth SQLite github: approved record -> authorization -> concurrent refresh CAS -> revoke; encrypted at rest
+ok 1 - OAuth SQLite github: approved record -> authorization -> concurrent refresh CAS -> revoke; encrypted at rest
+  ---
+  duration_ms: 250.093785
+  type: 'test'
+  ...
+# Subtest: OAuth SQLite google: approved record -> authorization -> concurrent refresh CAS -> revoke; encrypted at rest
+ok 2 - OAuth SQLite google: approved record -> authorization -> concurrent refresh CAS -> revoke; encrypted at rest
+  ---
+  duration_ms: 216.637277
+  type: 'test'
+  ...
+# Subtest: OAuth SQLite: lost rotating refresh response remains unresolved after restart and blocks retries
+ok 3 - OAuth SQLite: lost rotating refresh response remains unresolved after restart and blocks retries
+  ---
+  duration_ms: 274.968504
+  type: 'test'
+  ...
+# Subtest: OAuth SQLite: lock between lease and completion rejects stale epoch and preserves blocking lease
+ok 4 - OAuth SQLite: lock between lease and completion rejects stale epoch and preserves blocking lease
+  ---
+  duration_ms: 259.759084
+  type: 'test'
+  ...
+# Subtest: OAuth github: network authorization, verified subject, refresh, revoke and independent versions
+ok 5 - OAuth github: network authorization, verified subject, refresh, revoke and independent versions
+  ---
+  duration_ms: 33.095808
+  type: 'test'
+  ...
+# Subtest: OAuth github: exact callback and session/owner/principal/epoch state bindings; single use
+ok 6 - OAuth github: exact callback and session/owner/principal/epoch state bindings; single use
+  ---
+  duration_ms: 8.28782
+  type: 'test'
+  ...
+# Subtest: OAuth github: authorization expiry, denial, restart and lock consume no token request
+ok 7 - OAuth github: authorization expiry, denial, restart and lock consume no token request
+  ---
+  duration_ms: 4.5216
+  type: 'test'
+  ...
+# Subtest: OAuth github: simulator actually enforces PKCE, redirect, client secret, code expiry and code reuse
+ok 8 - OAuth github: simulator actually enforces PKCE, redirect, client secret, code expiry and code reuse
+  ---
+  duration_ms: 9.488479
+  type: 'test'
+  ...
+# Subtest: OAuth github: concurrent refresh uses one durable lease and makes one HTTP request
+ok 9 - OAuth github: concurrent refresh uses one durable lease and makes one HTTP request
+  ---
+  duration_ms: 5.53525
+  type: 'test'
+  ...
+# Subtest: OAuth github: confirmed invalid_grant requires reauthorization and errors omit provider descriptions
+ok 10 - OAuth github: confirmed invalid_grant requires reauthorization and errors omit provider descriptions
+  ---
+  duration_ms: 5.822289
+  type: 'test'
+  ...
+# Subtest: OAuth github: ambiguous rotating refresh is blocked without automatic retry
+ok 11 - OAuth github: ambiguous rotating refresh is blocked without automatic retry
+  ---
+  duration_ms: 4.47959
+  type: 'test'
+  ...
+# Subtest: OAuth github: pending target CAS, local scope approval and PKCE mutation reject safely
+ok 12 - OAuth github: pending target CAS, local scope approval and PKCE mutation reject safely
+  ---
+  duration_ms: 3.55297
+  type: 'test'
+  ...
+# Subtest: OAuth github: redirect, malformed response and scope expansion block token use
+ok 13 - OAuth github: redirect, malformed response and scope expansion block token use
+  ---
+  duration_ms: 11.291829
+  type: 'test'
+  ...
+# Subtest: OAuth google: network authorization, verified subject, refresh, revoke and independent versions
+ok 14 - OAuth google: network authorization, verified subject, refresh, revoke and independent versions
+  ---
+  duration_ms: 6.17811
+  type: 'test'
+  ...
+# Subtest: OAuth google: exact callback and session/owner/principal/epoch state bindings; single use
+ok 15 - OAuth google: exact callback and session/owner/principal/epoch state bindings; single use
+  ---
+  duration_ms: 3.37308
+  type: 'test'
+  ...
+# Subtest: OAuth google: authorization expiry, denial, restart and lock consume no token request
+ok 16 - OAuth google: authorization expiry, denial, restart and lock consume no token request
+  ---
+  duration_ms: 2.908379
+  type: 'test'
+  ...
+# Subtest: OAuth google: simulator actually enforces PKCE, redirect, client secret, code expiry and code reuse
+ok 17 - OAuth google: simulator actually enforces PKCE, redirect, client secret, code expiry and code reuse
+  ---
+  duration_ms: 6.92959
+  type: 'test'
+  ...
+# Subtest: OAuth google: concurrent refresh uses one durable lease and makes one HTTP request
+ok 18 - OAuth google: concurrent refresh uses one durable lease and makes one HTTP request
+  ---
+  duration_ms: 5.10561
+  type: 'test'
+  ...
+# Subtest: OAuth google: confirmed invalid_grant requires reauthorization and errors omit provider descriptions
+ok 19 - OAuth google: confirmed invalid_grant requires reauthorization and errors omit provider descriptions
+  ---
+  duration_ms: 3.565519
+  type: 'test'
+  ...
+# Subtest: OAuth google: ambiguous rotating refresh is blocked without automatic retry
+ok 20 - OAuth google: ambiguous rotating refresh is blocked without automatic retry
+  ---
+  duration_ms: 3.62899
+  type: 'test'
+  ...
+# Subtest: OAuth google: pending target CAS, local scope approval and PKCE mutation reject safely
+ok 21 - OAuth google: pending target CAS, local scope approval and PKCE mutation reject safely
+  ---
+  duration_ms: 2.93365
+  type: 'test'
+  ...
+# Subtest: OAuth google: redirect, malformed response and scope expansion block token use
+ok 22 - OAuth google: redirect, malformed response and scope expansion block token use
+  ---
+  duration_ms: 11.162099
+  type: 'test'
+  ...
+# Subtest: OAuth GitHub: non-expiring online OAuth App grant has no invented refresh capability
+ok 23 - OAuth GitHub: non-expiring online OAuth App grant has no invented refresh capability
+  ---
+  duration_ms: 3.49454
+  type: 'test'
+  ...
+# Subtest: OAuth Google: offline access does not guarantee refresh issuance, and rotated refresh is persisted
+ok 24 - OAuth Google: offline access does not guarantee refresh issuance, and rotated refresh is persisted
+  ---
+  duration_ms: 6.17764
+  type: 'test'
+  ...
+# Subtest: OAuth Google: subsequent authorization omitting refresh token preserves same-subject existing active refresh material
+ok 25 - OAuth Google: subsequent authorization omitting refresh token preserves same-subject existing active refresh material
+  ---
+  duration_ms: 4.68259
+  type: 'test'
+  ...
+# Subtest: OAuth GitHub: expired refresh material changes status without provider HTTP dispatch
+ok 26 - OAuth GitHub: expired refresh material changes status without provider HTTP dispatch
+  ---
+  duration_ms: 4.758059
+  type: 'test'
+  ...
+# Subtest: OAuth Google: official full URI identity scope responses match approved shorthand through network authorization and refresh
+ok 27 - OAuth Google: official full URI identity scope responses match approved shorthand through network authorization and refresh
+  ---
+  duration_ms: 3.93254
+  type: 'test'
+  ...
+# Subtest: OAuth production registry is immutable HTTPS; production rejects endpoint/transport overrides and synthetic requires literal loopback
+ok 28 - OAuth production registry is immutable HTTPS; production rejects endpoint/transport overrides and synthetic requires literal loopback
+  ---
+  duration_ms: 0.50374
+  type: 'test'
+  ...
+1..28
+# tests 28
+# suites 0
+# pass 28
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1282.000693

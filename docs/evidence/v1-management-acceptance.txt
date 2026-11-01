@@ -1,0 +1,192 @@
+TAP version 13
+# Subtest: current acceptance: Chromium management confirmation → official SDK stdio MCP → fixed mock
+    # Subtest: official SDK initialized over stdio exposes exactly six execution tools; no management tools
+    ok 1 - official SDK initialized over stdio exposes exactly six execution tools; no management tools
+      ---
+      duration_ms: 274.675884
+      type: 'test'
+      ...
+    # Subtest: actual UI signs in to S1 separately then unlocks to S2
+    ok 2 - actual UI signs in to S1 separately then unlocks to S2
+      ---
+      duration_ms: 328.58758
+      type: 'test'
+      ...
+    # Subtest: draft cancel never saves; confirm saves; labels render as text without XSS
+    ok 3 - draft cancel never saves; confirm saves; labels render as text without XSS
+      ---
+      duration_ms: 459.657673
+      type: 'test'
+      ...
+    # Subtest: actual UI retains only save ticket across reload and recovers committed metadata
+    ok 4 - actual UI retains only save ticket across reload and recovers committed metadata
+      ---
+      duration_ms: 159.92675
+      type: 'test'
+      ...
+    # Subtest: MCP ticket, metadata/status and actual whitelisted redacted upstream result; same ticket never dispatches twice
+    ok 5 - MCP ticket, metadata/status and actual whitelisted redacted upstream result; same ticket never dispatches twice
+      ---
+      duration_ms: 38.781568
+      type: 'test'
+      ...
+    # Subtest: actual UI pause denies MCP; replacement preserves independent versions; delete JSON body works
+    ok 6 - actual UI pause denies MCP; replacement preserves independent versions; delete JSON body works
+      ---
+      duration_ms: 427.340745
+      type: 'test'
+      ...
+    # Subtest: actual UI pending OAuth approval and replacement require no token entry
+    ok 7 - actual UI pending OAuth approval and replacement require no token entry
+      ---
+      duration_ms: 432.802944
+      type: 'test'
+      ...
+    # Subtest: actual UI lock rotates to S1, MCP denies; unlock restores; signout reaches S0
+    ok 8 - actual UI lock rotates to S1, MCP denies; unlock restores; signout reaches S0
+      ---
+      duration_ms: 282.639303
+      type: 'test'
+      ...
+    # Subtest: bridge denies missing/unsafe execution key without stdout contamination; no plaintext stored or logged
+    ok 9 - bridge denies missing/unsafe execution key without stdout contamination; no plaintext stored or logged
+      ---
+      duration_ms: 305.061092
+      type: 'test'
+      ...
+    1..9
+ok 1 - current acceptance: Chromium management confirmation → official SDK stdio MCP → fixed mock
+  ---
+  duration_ms: 3267.718445
+  type: 'test'
+  ...
+# Subtest: canonical encoding distinguishes missing, undefined, null, empty and exact secret bytes
+ok 2 - canonical encoding distinguishes missing, undefined, null, empty and exact secret bytes
+  ---
+  duration_ms: 9.822089
+  type: 'test'
+  ...
+# Subtest: full immutable approval, atomic rollback at every save boundary, single consumption and durable lost-response replay
+ok 3 - full immutable approval, atomic rollback at every save boundary, single consumption and durable lost-response replay
+  ---
+  duration_ms: 392.511307
+  type: 'test'
+  ...
+# Subtest: record CAS, independent status/material CAS and unique logical account
+ok 4 - record CAS, independent status/material CAS and unique logical account
+  ---
+  duration_ms: 253.830975
+  type: 'test'
+  ...
+# Subtest: external references contain no secret envelope or delegated execution authority
+ok 5 - external references contain no secret envelope or delegated execution authority
+  ---
+  duration_ms: 255.442985
+  type: 'test'
+  ...
+# Subtest: signed scoped tickets: expired new IDs, seven-day retention and immediate purge never reexecute
+ok 6 - signed scoped tickets: expired new IDs, seven-day retention and immediate purge never reexecute
+  ---
+  duration_ms: 258.516074
+  type: 'test'
+  ...
+# Subtest: draft, approval TTLs and epoch invalidation; authentication alone never decrypts
+ok 7 - draft, approval TTLs and epoch invalidation; authentication alone never decrypts
+  ---
+  duration_ms: 384.224137
+  type: 'test'
+  ...
+# Subtest: external dispatch crash/timeout replay is unknown, durable and blocks new-ID duplicate side effects
+ok 8 - external dispatch crash/timeout replay is unknown, durable and blocks new-ID duplicate side effects
+  ---
+  duration_ms: 394.120997
+  type: 'test'
+  ...
+# Subtest: accepted but never dispatched recovers as failed_before_dispatch; policy/status/version rechecked before dispatch
+ok 9 - accepted but never dispatched recovers as failed_before_dispatch; policy/status/version rechecked before dispatch
+  ---
+  duration_ms: 381.751607
+  type: 'test'
+  ...
+# Subtest: OAuth internal material lease CAS preserves record version; unknown/epoch lease fails closed
+ok 10 - OAuth internal material lease CAS preserves record version; unknown/epoch lease fails closed
+  ---
+  duration_ms: 322.231031
+  type: 'test'
+  ...
+# Subtest: persisted epoch invalidates another open vault master key and signing-key loss never regenerates tickets
+ok 11 - persisted epoch invalidates another open vault master key and signing-key loss never regenerates tickets
+  ---
+  duration_ms: 374.762727
+  type: 'test'
+  ...
+# Subtest: legacy encrypted records migrate without changing ciphertext, nonce or AAD; default paused until explicit approval
+ok 12 - legacy encrypted records migrate without changing ciphertext, nonce or AAD; default paused until explicit approval
+  ---
+  duration_ms: 330.620011
+  type: 'test'
+  ...
+# Subtest: optional synthetic draft confirms through real official SDK MCP save_credential exactly once; execution tools absent
+ok 13 - optional synthetic draft confirms through real official SDK MCP save_credential exactly once; execution tools absent
+  ---
+  duration_ms: 226.245216
+  type: 'test'
+  ...
+# Subtest: MCP save denies absent approval, altered payload, revoked session and lock; no secret error output
+ok 14 - MCP save denies absent approval, altered payload, revoked session and lock; no secret error output
+  ---
+  duration_ms: 201.837638
+  type: 'test'
+  ...
+# Subtest: MCP malformed arguments and unknown tool names never echo attacker-supplied secret keys
+ok 15 - MCP malformed arguments and unknown tool names never echo attacker-supplied secret keys
+  ---
+  duration_ms: 195.530188
+  type: 'test'
+  ...
+# Subtest: approved MCP retry returns original redacted result; different payload never rewrites
+ok 16 - approved MCP retry returns original redacted result; different payload never rewrites
+  ---
+  duration_ms: 207.565508
+  type: 'test'
+  ...
+# Subtest: official MCP failure journal, no-hit refusals, replay and restart recovery use actual local HTTP
+    # Subtest: actual stdio malformed keys, values and unknown tool names return generic errors with no echo or upstream hit
+    ok 1 - actual stdio malformed keys, values and unknown tool names return generic errors with no echo or upstream hit
+      ---
+      duration_ms: 6.206749
+      type: 'test'
+      ...
+    1..1
+ok 17 - official MCP failure journal, no-hit refusals, replay and restart recovery use actual local HTTP
+  ---
+  duration_ms: 3551.232298
+  type: 'test'
+  ...
+# Subtest: management S0/S1/S2, one admin, epoch cookie/CSRF rotation and execution idle expiry
+ok 18 - management S0/S1/S2, one admin, epoch cookie/CSRF rotation and execution idle expiry
+  ---
+  duration_ms: 595.399864
+  type: 'test'
+  ...
+# Subtest: manual drafts require exact confirmation and cancellation; record/status CAS; no direct-save route
+ok 19 - manual drafts require exact confirmation and cancellation; record/status CAS; no direct-save route
+  ---
+  duration_ms: 309.442892
+  type: 'test'
+  ...
+# Subtest: lost save response can be recovered after actual server restart and fresh login without secret or draft
+ok 20 - lost save response can be recovered after actual server restart and fresh login without secret or draft
+  ---
+  duration_ms: 516.712689
+  type: 'test'
+  ...
+1..20
+# tests 30
+# suites 0
+# pass 30
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 13361.944434

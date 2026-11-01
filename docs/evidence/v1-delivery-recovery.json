@@ -1,0 +1,20 @@
+{
+  "recorded_at": "2026-11-01T05:21:33.593Z",
+  "result": "passed",
+  "synthetic": true,
+  "method": "stop Vault, whole-directory cold copy, restore to separate private directory, reopen locked, authenticate then unlock with original passphrase",
+  "checks": [
+    "matching database/execution/request-signing keys copied",
+    "backup exact byte copy while source stopped",
+    "restored startup locked",
+    "authentication alone remains locked",
+    "original passphrase unlocks",
+    "same signed save request replays original redacted result after restore",
+    "one record remains, no duplicate save",
+    "exact secret checked only in trusted memory callback",
+    "no canary plaintext in restored files"
+  ],
+  "directory_mode": "0700",
+  "file_modes": "0600",
+  "scratch_removed": true
+}

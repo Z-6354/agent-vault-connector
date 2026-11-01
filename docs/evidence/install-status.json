@@ -1,0 +1,19 @@
+{
+  "command": [
+    "npm",
+    "install",
+    "--cache",
+    "/path/to/home/.hermes/profiles/developer/cache/scratch/agent-connector-review-8lnj9xrn/npm-cache",
+    "--no-audit",
+    "--no-fund"
+  ],
+  "environment": {
+    "PATH": "/usr/local/bin:/usr/bin:/bin",
+    "HOME": "/path/to/home/.hermes/profiles/developer/cache/scratch/agent-connector-review-8lnj9xrn/home",
+    "TMPDIR": "/path/to/home/.hermes/profiles/developer/cache/scratch/agent-connector-review-8lnj9xrn/tmp",
+    "npm_config_userconfig": "/dev/null",
+    "npm_config_globalconfig": "/dev/null"
+  },
+  "exit_code": 1,
+  "seconds": 0.07
+}

@@ -1,0 +1,10 @@
+# Parent-verified OAuth references
+These are retrieved official documentation facts, NOT actual provider authorization results. No real accounts/client credentials were used.
+
+GitHub OAuth Apps: https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps
+Retrieved current page describes authorization-code and device flows; registered client_id, exact configured callback, unpredictable state; PKCE S256 supported (plain not supported), verifier in token exchange; web exchange client_secret required. Current page ALSO describes optionally expiring OAuth App access tokens (8h) with refresh tokens (6 months unused), runtime offline_access opt-in or app setting. Do not hardcode old belief 'GitHub OAuth Apps never refresh': availability depends on app/response/server; GitHub Enterprise may ignore offline_access, refresh must NOT be assumed. Separate OAuth App from GitHub App semantics. Authorization/token endpoints fixed github.com/login/oauth/{authorize,access_token}. Preserve actual granted scopes, verify authenticated identity through official user endpoint before verified subject claims.
+
+Google Web Server: https://developers.google.com/identity/protocols/oauth2/web-server
+Registered Web application client, enabled required APIs, explicit minimum scopes, exact authorized redirect_uri, confidential client credentials protected. state protects callback. Offline access and consent/issuance conditions determine refresh availability; not every exchange contains refresh token, preserve valid stored refresh token when absent rather than overwriting blindly. Verify current official PKCE support/requirements per chosen application type, not assume GitHub/Google identical. Native/local app protocol rules differ from web application registration.
+
+Implement production registered endpoints with no agent-controlled URLs. Runtime tests remain isolated loopback synthetic provider, clearly labeled SIMULATION; real client registration/provider authorization BLOCKED until separate allowed credentials/account. Official requirements may change; source retrieval confirms docs only.
