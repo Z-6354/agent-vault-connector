@@ -2,6 +2,8 @@
 
 Current V1 scope is [V1-IMPLEMENTATION-PLAN.md](../V1-IMPLEMENTATION-PLAN.md) and [PROJECT-DESIGN.md §8A](../PROJECT-DESIGN.md). Earlier statements forbidding implementation have been superseded. This matrix distinguishes public documentation/source observations from actual client tests. **None of the five agents has passed a task through this center.** No agent CLI was launched in this implementation round; no production configuration, account, token, browser profile or environment file was read.
 
+User scope update: real tests of all five agents will be performed later by the user. They are outside this local V1 delivery and are not local-delivery blockers. Every row remains unverified; no account, model endpoint or real-agent startup is being requested for this round. The generic stdio configuration example in the project README is a candidate only for clients whose actual product supports stdio; cloud-only or OAuth-only clients need a separately verified reachable transport, which is not supplied by a localhost address.
+
 The evidence below uses known project files and previously recorded public documentation only. A source unavailable in one recorded session is not silently upgraded by a different session's summary. In particular, the design records a Dot FAQ reading, while the saved HTTP research recorded a 403; the accessible-source gap remains explicit. An SDK MCP client passing local tests does not establish any named agent's compatibility.
 
 | Agent / identity and version evidence | Known entry, direction and runtime | Native connection / browser reuse evidence | Protocol and authentication boundary | Actual status, reproducibility and blocker |
