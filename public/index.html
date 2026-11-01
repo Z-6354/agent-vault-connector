@@ -1,96 +1,96 @@
 <!doctype html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Local Agent Vault</title>
+  <title>智能体凭据保险库 · 本地管理</title>
   <link rel="icon" href="data:,">
   <link rel="stylesheet" href="/style.css">
   <script defer src="/app.js"></script>
 </head>
 <body>
   <main>
-    <header><p class="eyebrow">LOCAL MANAGEMENT</p><h1>Agent Vault</h1><p>Review connections here. Agents can use only approved, fixed operations.</p></header>
+    <header><p class="eyebrow">本地管理</p><h1>智能体凭据保险库</h1><p>在此审核连接。智能体只能执行您已批准的预设操作。</p></header>
     <p id="message" role="status" aria-live="polite"></p>
     <section id="login-panel">
-      <h2>Sign in</h2>
-      <p>Sign in with the administrator passphrase set during terminal initialization. The vault stays locked until you separately unlock it.</p>
+      <h2>登录</h2>
+      <p>请使用在终端初始化时设置的管理员口令登录。登录后仍需单独解锁保险库。</p>
       <form id="login-form">
-        <label for="login-passphrase">Administrator passphrase</label>
+        <label for="login-passphrase">管理员口令</label>
         <input id="login-passphrase" type="password" autocomplete="current-password" maxlength="1024" required>
-        <button type="submit">Sign in</button>
+        <button type="submit">登录</button>
       </form>
     </section>
     <section id="unlock-panel" hidden>
-      <div class="section-heading"><h2>Vault locked</h2><button id="locked-logout-button" type="button" class="secondary">Sign out</button></div>
-      <p>You are signed in. Enter the passphrase again to unlock the encrypted vault. Agents cannot execute while it is locked.</p>
+      <div class="section-heading"><h2>保险库已锁定</h2><button id="locked-logout-button" type="button" class="secondary">退出登录</button></div>
+      <p>您已登录。请再次输入口令以解锁加密保险库。锁定期间，智能体无法执行操作。</p>
       <form id="unlock-form">
-        <label for="passphrase">Unlock passphrase</label>
+        <label for="passphrase">解锁口令</label>
         <input id="passphrase" type="password" autocomplete="current-password" maxlength="1024" required>
-        <button type="submit">Unlock vault</button>
+        <button type="submit">解锁保险库</button>
       </form>
     </section>
     <section id="vault-panel" hidden>
-      <div class="section-heading"><h2>Connections</h2><div class="actions"><button id="lock-button" type="button" class="secondary">Lock vault</button><button id="logout-button" type="button" class="secondary">Sign out</button></div></div>
-      <p>Only metadata is displayed. Stored secrets cannot be read back. After 15 minutes without management activity, signing out locks the vault globally.</p>
+      <div class="section-heading"><h2>连接</h2><div class="actions"><button id="lock-button" type="button" class="secondary">锁定保险库</button><button id="logout-button" type="button" class="secondary">退出登录</button></div></div>
+      <p>此处仅显示元数据，已存储的机密信息无法读回。管理界面连续 15 分钟无操作将自动退出，并锁定所有会话共用的保险库。</p>
       <ul id="credentials"></ul>
       <div id="editor-panel">
-        <h2 id="editor-title">Add a connection</h2>
+        <h2 id="editor-title">添加连接</h2>
         <form id="credential-form">
-          <label for="label">Label</label><input id="label" maxlength="80" required autocomplete="off">
-          <label for="service">Service</label><select id="service" required></select>
-          <label for="credential-type">Credential type</label><select id="credential-type" required></select>
-          <label for="account-alias">Account alias</label><input id="account-alias" maxlength="80" required autocomplete="off">
-          <label for="origin">Service origin</label><input id="origin" type="url" required autocomplete="off">
-          <div id="secret-field"><label for="token">Secret</label><input id="token" type="password" maxlength="65536" required autocomplete="off"></div>
-          <fieldset><legend>Allow these operations</legend><div id="operation-choices"></div></fieldset>
+          <label for="label">名称</label><input id="label" maxlength="80" required autocomplete="off">
+          <label for="service">服务</label><select id="service" required></select>
+          <label for="credential-type">凭据类型</label><select id="credential-type" required></select>
+          <label for="account-alias">账号别名</label><input id="account-alias" maxlength="80" required autocomplete="off">
+          <label for="origin">服务来源地址</label><input id="origin" type="url" required autocomplete="off">
+          <div id="secret-field"><label for="token">机密信息</label><input id="token" type="password" maxlength="65536" required autocomplete="off"></div>
+          <fieldset><legend>允许执行的操作</legend><div id="operation-choices"></div></fieldset>
           <p id="service-hint" class="hint"></p>
-          <div class="actions"><button id="save-button" type="submit">Review connection</button><button id="cancel-button" type="button" class="secondary" hidden>Cancel replacement</button></div>
+          <div class="actions"><button id="save-button" type="submit">审核连接</button><button id="cancel-button" type="button" class="secondary" hidden>取消替换</button></div>
         </form>
       </div>
       <section id="confirmation-panel" hidden aria-labelledby="confirmation-title">
-        <h2 id="confirmation-title">Confirm this connection</h2>
-        <p>The secret is held only in the pending server draft and is never displayed here. Review the complete access details before saving.</p>
+        <h2 id="confirmation-title">确认连接</h2>
+        <p>机密信息仅暂存在服务端待确认的草稿中，不会在此显示。保存前请核对完整的访问权限。</p>
         <dl id="draft-details"></dl>
         <p id="draft-expiry" class="hint"></p>
-        <div class="actions"><button id="confirm-button" type="button">Confirm and save</button><button id="cancel-draft-button" type="button" class="secondary">Cancel draft</button></div>
+        <div class="actions"><button id="confirm-button" type="button">确认并保存</button><button id="cancel-draft-button" type="button" class="secondary">取消草稿</button></div>
       </section>
       <details id="save-recovery-panel">
-        <summary>Recover a save result</summary>
-        <p>If a save response was lost, use its request ID after signing in and unlocking again. This checks the completed result without saving again. An unfinished draft cannot be recovered after restart.</p>
+        <summary>找回保存结果</summary>
+        <p>如果未收到保存响应，请重新登录并解锁，然后使用该次保存的请求 ID 查询已完成的结果。查询不会重复保存。重启后，未完成的草稿无法恢复。</p>
         <form id="save-recovery-form">
-          <label for="save-request-id">Save request ID</label><input id="save-request-id" maxlength="1024" required autocomplete="off" spellcheck="false">
-          <button type="submit">Recover save result</button>
+          <label for="save-request-id">保存请求 ID</label><input id="save-request-id" maxlength="1024" required autocomplete="off" spellcheck="false">
+          <button type="submit">找回保存结果</button>
         </form>
         <p id="save-recovery-result" role="status"></p>
       </details>
       <section id="browser-approval-panel" aria-labelledby="browser-approval-title">
-        <div class="section-heading"><h2 id="browser-approval-title">Browser approvals</h2><button id="refresh-approvals-button" type="button" class="secondary">Refresh approvals</button></div>
-        <p>Review the authenticated requesting principal, fixed site, connection, action and expiry before approving. Filling does not approve submitting a login form. Each action needs its own single-use approval.</p>
+        <div class="section-heading"><h2 id="browser-approval-title">浏览器操作审批</h2><button id="refresh-approvals-button" type="button" class="secondary">刷新审批请求</button></div>
+        <p>批准前请核对已认证的请求主体、预设站点、连接、操作和有效期。批准填充不代表批准提交登录表单，每个操作都需要单独的一次性批准。</p>
         <p id="browser-support-status" class="hint"></p>
-        <p id="browser-approval-status" class="hint" role="status">Refresh to check for requests. This panel does not poll or keep your management session alive.</p>
+        <p id="browser-approval-status" class="hint" role="status">请刷新以查看请求。此面板不会自动轮询，也不会延长管理会话。</p>
         <ul id="browser-approvals"></ul>
       </section>
       <section id="oauth-provider-panel" aria-labelledby="oauth-provider-title">
-        <div class="section-heading"><h2 id="oauth-provider-title">OAuth provider clients</h2><button id="refresh-providers-button" type="button" class="secondary">Refresh providers</button></div>
-        <p>Register an application manually with the provider, copy the exact redirect URI below into its callback settings, then save its client ID and secret here. Saving a client does not register a remote application or authorize an account.</p>
-        <p>The fixed minimum scopes are GitHub <code>read:user</code> and Google <code>openid email</code>. Create an OAuth connection using Review connection and Confirm and save, then choose Authorize for that connection.</p>
+        <div class="section-heading"><h2 id="oauth-provider-title">OAuth 提供方客户端</h2><button id="refresh-providers-button" type="button" class="secondary">刷新提供方</button></div>
+        <p>请先在提供方手动注册应用，将下方完整的重定向 URI 原样复制到回调设置，再在此保存客户端 ID 和密钥。保存客户端不会在远端注册应用，也不会授权账号。</p>
+        <p>预设的最小权限范围为 GitHub 的 <code>read:user</code> 和 Google 的 <code>openid email</code>。请先通过“审核连接”和“确认并保存”创建 OAuth 连接，再为该连接选择“授权”。</p>
         <p id="oauth-provider-status" class="hint" role="status"></p>
         <ul id="oauth-providers"></ul>
       </section>
       <section id="operation-panel" aria-labelledby="operation-title">
-        <div class="section-heading"><h2 id="operation-title">Operation history</h2><button id="refresh-operations-button" type="button" class="secondary">Refresh operations</button></div>
-        <p>Possibly executed operations need evidence review. Confirming an outcome records your finding. Authorizing a new attempt accepts duplicate risk; it does not resend the request.</p>
+        <div class="section-heading"><h2 id="operation-title">操作记录</h2><button id="refresh-operations-button" type="button" class="secondary">刷新操作记录</button></div>
+        <p>对于可能已执行的操作，请先核查证据。确认结果会记录您的核查结论。允许再次尝试意味着接受重复执行风险，但不会立即重发请求。</p>
         <ul id="operations"></ul>
       </section>
       <details id="audit-panel">
-        <summary>Recent audit events</summary>
-        <p class="hint">Latest 100 events. Events contain action, principal, record versions and time only.</p>
+        <summary>近期审计事件</summary>
+        <p class="hint">显示最近 100 条事件，仅包含操作、主体、记录版本和时间。</p>
         <ul id="audit-events"></ul>
       </details>
-      <p class="hint">Local deletion does not revoke the token upstream. Encrypted request comparison copies may remain for up to 7 days; deleting the current connection does not immediately remove those copies.</p>
+      <p class="hint">在本地删除连接不会撤销服务端的令牌。用于比对请求的加密副本最多保留 7 天；删除当前连接不会立即清除这些副本。</p>
     </section>
-    <footer>Single administrator · Exact loopback HTTP · Lock or sign out when finished</footer>
+    <footer>单管理员 · 严格匹配的回环 HTTP 地址 · 使用完毕请锁定或退出登录</footer>
   </main>
 </body>
 </html>
