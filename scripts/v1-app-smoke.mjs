@@ -20,7 +20,7 @@ try {
   app.stdout.on('data',b=>{output+=b;});app.stderr.on('data',b=>{output+=b;});
   const origin=`http://127.0.0.1:${port}`;
   await new Promise((resolve,reject)=>{const start=Date.now();const poll=setInterval(async()=>{try{if(app.exitCode!==null)throw new Error('CLI exited');if(Date.now()-start>10000)throw new Error('CLI timeout');const r=await fetch(origin);if(r.ok){clearInterval(poll);resolve();}}catch(error){if(app.exitCode!==null||Date.now()-start>10000){clearInterval(poll);reject(error);}}},50);});
-  browser=await chromium.launch({executablePath:'/usr/bin/chromium',headless:true,chromiumSandbox:true,args:['--disable-dev-shm-usage'],env:{...process.env,HEADLESS:'1'}});
+  browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH || '/usr/bin/chromium',headless:true,chromiumSandbox:true,args:['--disable-dev-shm-usage'],env:{...process.env,HEADLESS:'1'}});
   const page=await browser.newPage();const errors=[];page.on('pageerror',e=>errors.push(e.message));
   await page.goto(origin);
   await page.getByLabel('Administrator passphrase',{exact:true}).fill(passphrase);await page.getByRole('button',{name:'Sign in',exact:true}).click();

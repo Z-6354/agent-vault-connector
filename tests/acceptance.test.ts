@@ -22,7 +22,7 @@ test('current acceptance: Chromium management confirmation → official SDK stdi
   await initialize(directory, passphrase);
   const server = await createServer(directory, 0); const mock = await startMock();
   const evidence = path.join(project, 'docs/evidence'); fs.mkdirSync(evidence, { recursive: true });
-  const browser = await chromium.launch({ executablePath: '/usr/bin/chromium', headless: true, chromiumSandbox: true, args: ['--disable-dev-shm-usage'], env: { ...process.env, HEADLESS: '1' } });
+  const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || '/usr/bin/chromium', headless: true, chromiumSandbox: true, args: ['--disable-dev-shm-usage'], env: { ...process.env, HEADLESS: '1' } });
   const page = await browser.newPage(); const pageErrors: string[] = []; page.on('pageerror', error => pageErrors.push(error.message));
   const client = new Client({ name: 'v1-acceptance', version: '1.0.0' });
   const transport = new StdioClientTransport({ command: process.execPath, args: ['dist/src/cli.js', 'bridge', '--origin', server.origin, '--credential-file', path.join(directory, 'execution.key')], cwd: project, env: { PATH: process.env.PATH!, HOME: root, TMPDIR: root, NODE_ENV: 'test' }, stderr: 'pipe' });
