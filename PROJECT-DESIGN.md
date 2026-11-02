@@ -1,3 +1,5 @@
+[English](PROJECT-DESIGN_EN.md) | [中文](PROJECT-DESIGN.md)
+
 # 统一凭据中心：完整设计评审稿
 
 状态：设计方案，待评审；不代表实现完成或客户端已兼容。
