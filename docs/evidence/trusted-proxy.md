@@ -1,6 +1,6 @@
 # Explicit trusted loopback reverse proxy
 
-Date: 2026-11-02. Scope: source, documentation and focused synthetic tests. No commit, deployment, restart of port 3210, full suite or SHA check was performed. No production configuration or `<data-dir>` files were read. The existing diagnostic implementation and tests were preserved.
+Date: 2026-11-02. Scope: source, documentation and focused synthetic tests. No commit, deployment, restart of port 3210, full suite or SHA check was performed. No production configuration or `/path/to/vault` files were read. The existing diagnostic implementation and tests were preserved.
 
 ## Administrator-supplied gateway evidence
 
