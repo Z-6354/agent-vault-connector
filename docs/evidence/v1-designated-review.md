@@ -3,7 +3,7 @@
 意见作者：Hermes @reviewer。
 文件由 developer 依据 reviewer 消息转录，非 reviewer 亲写。送审后当前范围限定通过。
 
-以下为 reviewer 消息原文：
+以下为 reviewer 消息转录（内部路径与工具名称已作公开脱敏）：
 
 正式复核已完成，覆盖你列的当前产品接线/P2/证据（刚按hermes请求完成，无需重跑）。指定reviewer：Hermes @reviewer；本轮使用 /path/to/home/.local/bin/review-tool exec --sandbox read-only，任务proc_e032b5004095 exit0，并亲读关键源码及程序核TAP。结论：按V1-PRODUCT-INTEGRATION-ADDENDUM，当前可运行本地产品V1限定通过，无剩余已确认阻断。
 
