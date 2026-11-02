@@ -137,7 +137,7 @@ GitHub 与 Google 分别作为适配任务，不假设 PKCE、refresh token 或�
 
 专用客户端不保存录音/转写/对话历史，避免 localStorage/IndexedDB；模型服务、ASR、MCP、代理禁止正文/参数/秘密异常 trace。日志不能只靠中心去敏；外部 Agent 如强制持久化参数须明确该路径不满足无秘密日志目标。内存、交换分区、崩溃转储的实际限制需如实说明，不把完全本地等同无痕。
 
-目前未获准本地模型/ASR 入口。此前只读 PATH 探查未找到常见可执行，未知端口不构成服务证据；指定 coding-tool 返回的路由警告不能作本地推理证明。不得用模拟 ASR 或云模型声称该扩展端到端通过。
+目前未获准本地模型/ASR 入口。此前只读 PATH 探查未找到常见可执行，未知端口不构成服务证据；指定代码工具 返回的路由警告不能作本地推理证明。不得用模拟 ASR 或云模型声称该扩展端到端通过。
 
 ## 8. 信任边界与故障处理
 
@@ -269,4 +269,4 @@ OAuth：GitHub/Google 分别完成客户端注册条件核查、本地模拟协�
 8. DSH 社区桥固定提交 README（已读取，风险证据）：https://github.com/sanshanya/dsh-dot-mcp/blob/a6d4ddac3ca7ec1b0d2baf334f1df5f7d1a81a56/README.md
 9. Hermes 官方文档：https://hermes-agent.nousresearch.com/docs/；本轮依据已加载 native-mcp 技能参考及实际 browser_vault 工具 schema，未枚举真实 vault。
 
-规划执行说明：已使用指定 /path/to/home/.local/bin/coding-tool 生成设计审查建议；其警告实际模型为 <model-route>，不能据此声称 Sonnet 路由已生效，亦不以该调用证明可选扩展完全本地。
+规划执行说明：已使用指定 <coding-tool> 生成设计审查建议；其警告实际模型为 <model-route>，不能据此声称 Sonnet 路由已生效，亦不以该调用证明可选扩展完全本地。

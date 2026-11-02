@@ -77,7 +77,7 @@ server {
 
 For a public nondefault TLS port, include that port in both `--public-origin` and the preserved `Host`. The browser's original `Origin` must pass through unchanged; do not manufacture it or replace it with the upstream origin. By default a mapping service must preserve the configured public Host and browser Origin and provide TLS. Fastify proxy trust stays disabled. A management cookie alone cannot bypass same-origin CSRF validation.
 
-For the administrator-observed example-host gateway, which rewrites Host to `127.0.0.1:<port>`, explicitly enable the fixed loopback proxy mode on the next operator-controlled startup (use your existing data-directory and product-config arguments):
+For edge gateways that rewrite Host to a loopback address, explicitly enable the fixed loopback proxy mode on the next operator-controlled startup (use your existing data-directory and product-config arguments):
 
 ```sh
 node dist/src/cli.js serve --data-dir <existing-data-directory> --port <port> \
