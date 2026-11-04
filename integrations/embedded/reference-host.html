@@ -1,0 +1,12 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><title>内嵌安全输入参考宿主</title><style>body{font:14px -apple-system,BlinkMacSystemFont,'SF Pro Text','Segoe UI',sans-serif;background:#1c1c1e;color:#ffffff;padding:28px;-webkit-font-smoothing:antialiased}.bubble{padding:18px;border:0.5px solid rgba(84,84,88,0.36);border-radius:14px;max-width:450px;background:rgba(28,28,30,0.85)}button{padding:8px 12px;background:#0A84FF;border:0;border-radius:8px;color:#fff;font-weight:600}#slot{margin-top:16px}#result{white-space:pre-wrap;color:#8e8e93}</style></head><body><h2>参考宿主 · 非产品安装页</h2><p>原生宿主收到请求元数据后，在当前消息中挂载安全卡片。</p><section class="bubble"><p>请授权本次凭据连接</p><div id="slot"></div></section><p id="result" role="status"></p><script type="module">
+import {mountSecureInput} from './host-adapter.mjs';
+window.mountVaultRequest = (request, presentation='inline') => {
+  window.__lastResult = null;
+  return mountSecureInput(document.getElementById('slot'),request,{presentation,onResult:result=>{
+    window.__lastResult = result;
+    document.getElementById('result').textContent = JSON.stringify(result);
+  }});
+};
+window.__hostReady = true;
+</script></body></html>

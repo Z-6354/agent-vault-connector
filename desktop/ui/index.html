@@ -1,0 +1,10 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Agent Vault</title><link rel="stylesheet" href="styles.css"><script src="app.js" defer></script></head>
+<body><main class="card" aria-labelledby="secure-input-title">
+<header><span class="shield" aria-hidden="true">♢</span><h1 id="secure-input-title">Agent Vault</h1><button id="close-secure-input" class="close" aria-label="取消并关闭">×</button></header>
+<form id="secure-input-form" autocomplete="off">
+<p id="secure-input-detail">等待安全输入请求</p>
+<label class="sr-only" for="secure-input-secret">密码或密钥</label><input id="secure-input-secret" type="password" placeholder="输入密码或密钥" autocomplete="new-password" required maxlength="16384" disabled>
+<div id="secure-input-notice" role="status" aria-live="polite"></div>
+<footer><button class="authorize" id="authorize" type="submit" disabled>🔒 授权并存入</button><button id="decline-secure-input" class="cancel" type="button" disabled>取消</button></footer>
+</form></main></body></html>

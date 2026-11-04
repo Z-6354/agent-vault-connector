@@ -1,0 +1,72 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Vault 原生内置安全卡片</title><style>body{margin:0;padding:16px;background:var(--background,#1c1c1e);color:var(--foreground,#ffffff);font:14px/1.5 -apple-system,BlinkMacSystemFont,'SF Pro Text','Segoe UI','PingFang SC','Microsoft YaHei',system-ui,sans-serif;-webkit-font-smoothing:antialiased}#status{padding:12px 14px;border:0.5px solid var(--border,rgba(84,84,88,0.36));border-radius:10px;max-width:400px;background:var(--card,rgba(28,28,30,0.85));color:var(--muted-foreground,#8e8e93);font-size:13px}iframe{display:block;border:0.5px solid rgba(84,84,88,0.36);border-radius:18px;width:400px;max-width:100%;height:260px;background:#1c1c1e}</style></head><body><div id="status" role="status">正在准备本地安全卡片…</div><script>
+'use strict';
+(() => {
+ const status=document.getElementById('status');
+ let ready=false,frame=null,request=null,done=false,timeoutS=0,deadline=0,timer=null;
+ const notify=(method,params)=>parent.postMessage({jsonrpc:'2.0',method,params},'*');
+ const size=height=>notify('ui/notifications/size-changed',{width:400,height});
+ const fail=()=>{status.hidden=false;status.textContent='宿主无法连接本地内置卡片。请检查本地服务与宿主权限；不要在聊天中输入凭据。';};
+ let nextId=1;const pending=new Map();
+ function callServer(method,params){
+  return new Promise((resolve,reject)=>{
+   const id='card:'+(nextId++);pending.set(id,{resolve,reject});
+   parent.postMessage({jsonrpc:'2.0',id,method,params},'*');
+   setTimeout(()=>{if(pending.has(id)){pending.delete(id);reject(new Error('timeout'));}},10000);
+  });
+ }
+ function tick(){
+  const left=Math.max(0,Math.ceil((deadline-Date.now())/1000));
+  if(frame&&!done){status.hidden=false;status.textContent='剩余 '+left+' 秒';}
+  if(left<=0&&frame&&!done){done=true;frame.remove();frame=null;status.textContent='本次输入已过期';size(64);}
+ }
+ function mount(frameUrl){
+  if(frame||done)return;
+  try{
+   const url=new URL(frameUrl);
+   if(url.protocol!=='http:'||url.hostname!=='127.0.0.1'||url.username||url.password||url.pathname!=='/card/'+request||!url.searchParams.get('key'))throw Error();
+   frame=document.createElement('iframe');frame.title='安全凭据输入';frame.sandbox='allow-scripts';frame.referrerPolicy='no-referrer';frame.src=url.href;
+   document.body.append(frame);size(260);
+   if(timeoutS>0){deadline=Date.now()+timeoutS*1000;timer=setInterval(tick,1000);}
+  }catch{fail();}
+ }
+ function complete(value){
+  if(frame){frame.remove();frame=null;}if(timer){clearInterval(timer);timer=null;}
+  done=true;status.hidden=false;
+  status.textContent=value.status==='captured'?'🔒 已安全存入本地 · '+value.ref:value.status==='declined'?'本次授权已取消':'本次输入已过期';
+  size(64);
+ }
+ addEventListener('message',event=>{
+  const value=event.data;
+  if(frame&&event.source===frame.contentWindow&&event.origin==='null'){
+   if(value?.type!=='vault-input-result'||value.request_id!==request||!['captured','declined','expired'].includes(value.status))return;
+   if(value.status==='captured'&&(typeof value.ref!=='string'||!value.ref.startsWith('vault://')))return;
+   complete(value);return;
+  }
+  if(event.source!==parent||value?.jsonrpc!=='2.0')return;
+  if(typeof value.id==='string'&&value.id.startsWith('card:')&&pending.has(value.id)){
+   const p=pending.get(value.id);pending.delete(value.id);
+   if(value.error){p.reject(new Error('call failed'));return;}
+   const result=value.result||{};
+   p.resolve({structuredContent:result.structuredContent||{}});return;
+  }
+  if(value.id==='vault:init'){
+   if(!value.result||value.result.protocolVersion!=='2026-01-26'){fail();return;}
+   ready=true;notify('ui/notifications/initialized',{});size(64);
+  }else if(value.method==='ui/notifications/tool-input'&&value.params){
+   const args=value.params.arguments||{};if(typeof args.timeout_s==='number'&&args.timeout_s>0)timeoutS=args.timeout_s;
+  }else if(ready&&value.method==='ui/notifications/tool-result'&&value.params){
+   const sc=value.params.structuredContent||{};
+   const id=sc.request_id;
+   if(typeof id!=='string'||!/^[0-9a-f-]{36}$/i.test(id)){fail();return;}
+   request=id;
+   callServer('tools/call',{name:'secure_input_frame',arguments:{request_id:id}})
+    .then(r=>mount(r.structuredContent.frame_url)).catch(fail);
+  }else if(value.method==='ui/notifications/tool-cancelled'){done=true;status.hidden=false;status.textContent='本次输入已取消';size(64);}
+  else if(value.method==='ui/resource-teardown'&&value.id!==undefined){
+   if(frame)frame.remove();frame=null;done=true;
+   parent.postMessage({jsonrpc:'2.0',id:value.id,result:{}},'*');
+  }
+ });
+ parent.postMessage({jsonrpc:'2.0',id:'vault:init',method:'ui/initialize',params:{protocolVersion:'2026-01-26',appInfo:{name:'local-vault-inline-card',version:'0.2.0'},appCapabilities:{availableDisplayModes:['inline']}}},'*');
+})();
+</script></body></html>

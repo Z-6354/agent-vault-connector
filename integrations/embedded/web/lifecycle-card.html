@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<meta name="referrer" content="no-referrer">
+<title>密码库</title>
+<style>
+:root{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif;color:#000;color-scheme:light;background:transparent!important}*{box-sizing:border-box}body{background:transparent!important;margin:0;padding:0}.card{position:relative;width:100%;max-width:460px;margin:0 auto;padding:26px 24px 24px;border-radius:24px;background:rgba(255,255,255,.92);backdrop-filter:blur(30px) saturate(190%);box-shadow:0 8px 30px #0000000a}header{margin-bottom:22px}.eyebrow{font-size:13px;font-weight:600;color:#45454d;margin:0 0 8px}h1{font-size:25px;letter-spacing:-.6px;line-height:1.3;margin:0 0 10px}p{margin:0;line-height:1.6}.description,.hint{font-size:14px;color:#45454d}.fields{display:grid;gap:16px}label{display:grid;gap:8px;font-size:14px;font-weight:600}input{width:100%;min-width:0;min-height:48px;padding:12px 14px;font:inherit;font-weight:400;color:#000;background:#F2F2F7;border:1px solid transparent;border-radius:12px}input:focus-visible,button:focus-visible{outline:3px solid #0062CC;outline-offset:3px}input:disabled{color:#55555f;opacity:1}button{border:0;border-radius:13px;width:100%;min-height:48px;margin-top:20px;padding:12px 16px;background:#0062CC;color:white;font:inherit;font-size:16px;font-weight:600;cursor:pointer}button:disabled{background:#e4e4eb;color:#55555f;cursor:default}.hint{margin-top:14px}.notice{margin-top:16px;padding:12px 14px;border-radius:12px;font-size:14px;line-height:1.6;overflow-wrap:anywhere;background:#F2F2F7}.notice.error{border-inline-start:3px solid #FF3B30;color:#a41d15;background:#fff1f0}.notice.success{border-inline-start:3px solid #0062CC;color:#004b9c;background:#edf5ff}.notice.busy:before{content:"";display:inline-block;width:13px;height:13px;margin-right:9px;vertical-align:-2px;border:2px solid #b5cbea;border-top-color:#0062CC;border-radius:50%;animation:spin .8s linear infinite}[hidden]{display:none!important}@keyframes spin{to{transform:rotate(360deg)}}@media(prefers-reduced-motion:reduce){.notice.busy:before{animation:none}}@media(max-width:360px){.card{padding:22px 16px;border-radius:18px}h1{font-size:23px}}
+</style>
+</head>
+<body>
+<main class="card" id="card" aria-busy="true">
+<header><p class="eyebrow" id="target">密码库</p><h1 id="title">正在准备…</h1><p class="description" id="description">请稍候，正在读取本次操作。</p></header>
+<div id="fields" class="fields" hidden>
+<label id="name-row" hidden>密码库名称<input id="name" type="text" autocomplete="off" maxlength="200"></label>
+<label id="service-row" hidden>服务<input id="service" type="text" autocomplete="off" maxlength="200" spellcheck="false"></label>
+<label>账号<input id="account" type="text" autocomplete="username" maxlength="320" autocapitalize="none" spellcheck="false"></label>
+<label><span id="secret-label">主密码</span><input id="secret" type="password" autocomplete="off" autocapitalize="none" spellcheck="false"></label>
+<label id="confirm-row" hidden>再次输入主密码<input id="confirm" type="password" autocomplete="new-password" autocapitalize="none" spellcheck="false"></label>
+</div>
+<div id="notice" class="notice busy" role="status" aria-live="polite" aria-atomic="true">正在读取操作信息…</div>
+<button type="button" id="submit" disabled>请稍候…</button>
+<p class="hint">密码和密钥请只在此卡片中输入。</p>
+</main>
+<script>
+(()=>{
+'use strict';
+const $=id=>document.getElementById(id);
+let context=null,busy=false,done=false,endpoint=null;
+const labels={create:'创建密码库',login:'登录密码库',credential:'保存并验证'};
+const clearSecrets=()=>{$('secret').value='';$('confirm').value='';};
+function notice(text,kind=''){ $('notice').textContent=text;$('notice').className='notice'+(kind?' '+kind:'');$('notice').setAttribute('role',kind==='error'?'alert':'status'); }
+function setBusy(value){busy=value;$('card').setAttribute('aria-busy',String(value));for(const input of document.querySelectorAll('input'))input.disabled=value||done;$('submit').disabled=value||done;$('submit').textContent=value?'正在处理…':done?'已完成':context?labels[context.mode]:'重新加载';}
+async function request(suffix,body){
+ const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),20000);
+ try{const response=await fetch(endpoint+suffix,{method:body===undefined?'GET':'POST',mode:'cors',credentials:'omit',cache:'no-store',referrerPolicy:'no-referrer',headers:body===undefined?{}:{'Content-Type':'text/plain'},body,signal:controller.signal});return {ok:response.ok,status:response.status,data:response.ok?await response.json():null};}finally{clearTimeout(timer);}
+}
+function httpError(status){
+ if(status===401||status===403)return '本次操作未获授权或已失效，请重新打开卡片。';
+ if(status===404||status===410)return '本次卡片已过期或不可用，请重新打开卡片。';
+ if(status===429)return '请求过于频繁，请稍后重新打开卡片。';
+ if(status===504||status===408)return '服务响应超时，操作结果尚未确认，请检查连接及记录后重试。';
+ return '服务暂时无法处理请求，操作结果尚未确认，请检查服务及记录后重试。';
+}
+async function load(){
+ if(busy)return;setBusy(true);notice('正在读取操作信息…','busy');
+ try{
+  const url=new URL(location.href);
+  if(!/^https?:$/.test(url.protocol)||!/^\/lifecycle\/card\/[A-Za-z0-9_-]+\/?$/.test(url.pathname))throw Error('address');
+  endpoint=url.origin+url.pathname.replace(/\/$/,'');
+  const response=await request('/context');
+  if(!response.ok){notice(httpError(response.status),'error');return;}
+  const data=response.data;
+  if(!data||!Object.hasOwn(labels,data.mode)||!['local','cloud'].includes(data.target)||['name','account','service'].some(key=>typeof data[key]!=='string'))throw Error('context');
+  context={mode:data.mode,target:data.target};
+  $('target').textContent=data.target==='local'?'本地密码库':'云端密码库';$('title').textContent=labels[data.mode];
+  $('description').textContent={create:'设置账号和主密码，开始使用密码库。',login:'输入主密码以继续使用密码库。',credential:'核对账号和服务，输入需要保存的密码或密钥。'}[data.mode];
+  for(const key of ['name','account','service'])$(key).value=data[key];
+  $('name-row').hidden=data.mode!=='create';$('service-row').hidden=data.mode!=='credential';$('confirm-row').hidden=data.mode!=='create';
+  $('secret-label').textContent=data.mode==='credential'?'密码或密钥':'主密码';$('secret').autocomplete=data.mode==='create'?'new-password':data.mode==='login'?'current-password':'off';
+  $('fields').hidden=false;notice(data.mode==='create'?'请妥善保管主密码。':'准备就绪，请填写后继续。');
+ }catch{notice('无法读取操作信息，请检查连接后重新加载卡片。','error');}finally{clearSecrets();setBusy(false);}
+}
+async function submit(){
+ if(busy||done)return;if(!context){await load();return;}
+ const account=$('account').value.trim(),secret=$('secret').value,confirm=$('confirm').value,service=$('service').value.trim();
+ let invalid='';
+ if(!account)invalid='请填写账号。';else if(!secret)invalid=context.mode==='credential'?'请输入密码或密钥。':'请输入主密码。';else if(context.mode==='create'&&secret!==confirm)invalid='两次输入的主密码不一致，请重新输入。';else if(context.mode==='credential'&&!service)invalid='请填写服务名称。';
+ if(invalid){clearSecrets();notice(invalid,'error');return;}
+ setBusy(true);notice(context.mode==='credential'?'正在保存并验证凭据…':context.mode==='create'?'正在创建密码库…':'正在登录密码库…','busy');
+ let body=JSON.stringify(context.mode==='create'?{account,passphrase:secret,confirm_passphrase:confirm,name:$('name').value.trim()}:context.mode==='login'?{account,passphrase:secret}:{account,secret,service});
+ clearSecrets();
+ try{
+  const response=await request('/submit',body);body='';
+  if(!response.ok){notice(httpError(response.status),'error');return;}
+  const result=response.data;
+  const expected=context.mode==='credential'?'valid':'ready';
+  if(result?.status===expected){done=true;notice(context.mode==='credential'?'凭据已保存，验证通过。':context.mode==='create'?'密码库已创建，可以继续保存凭据。':'登录成功，可以继续使用密码库。','success');}
+  else if(result?.status==='rejected')notice(context.mode==='credential'?'凭据验证被拒绝，请核对账号和密码或密钥后重新输入。':'账号或主密码未通过验证，请核对后重新输入。','error');
+  else if(result?.status==='validation_unavailable')notice('验证服务暂时不可用，凭据有效性及保存结果尚未确认，请检查记录后重试。','error');
+  else if(result?.status==='validation_unsupported')notice('此服务暂不支持凭据验证，有效性及保存结果尚未确认。','error');
+  else notice('操作结果未能确认，请检查服务状态及记录后重试。','error');
+ }catch{notice('连接中断或响应超时，操作结果尚未确认，请检查连接及记录后重试。','error');}
+ finally{body='';clearSecrets();setBusy(false);}
+}
+$('submit').addEventListener('click',submit);
+$('fields').addEventListener('keydown',event=>{if(event.key==='Enter'&&!event.isComposing){event.preventDefault();void submit();}});
+window.addEventListener('pagehide',clearSecrets);
+void load();
+})();
+</script>
+</body>
+</html>

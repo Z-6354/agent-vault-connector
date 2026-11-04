@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>安全凭据输入</title>
+  <link rel="stylesheet" href="/assets/card.css">
+  <script src="/assets/card.js" defer></script>
+</head>
+<body>
+  <main aria-labelledby="title">
+    <header>
+      <span class="mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+      </span>
+      <div class="headings">
+        <span class="eyebrow">安全凭据输入</span>
+        <h1 id="title">正在连接…</h1>
+      </div>
+      <button id="close" type="button" aria-label="取消">×</button>
+    </header>
+    <form id="form" autocomplete="off">
+      <p id="prompt">正在连接保险库…</p>
+      <label for="secret" class="sr-only">密码或密钥</label>
+      <div class="field">
+        <span class="lock" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+        </span>
+        <input id="secret" type="password" required disabled maxlength="16384" autocomplete="new-password" placeholder="输入密码或密钥">
+      </div>
+      <div id="notice" role="status" aria-live="polite"></div>
+      <footer>
+        <button id="submit" type="button" disabled>授权并存入</button>
+        <button id="cancel" type="button" disabled>取消</button>
+      </footer>
+    </form>
+  </main>
+</body>
+</html>

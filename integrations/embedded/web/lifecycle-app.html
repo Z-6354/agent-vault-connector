@@ -1,0 +1,44 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>html,body{margin:0;background:transparent;font:14px system-ui;color:#111}iframe{width:100%;max-width:440px;height:540px;border:0;display:block}#status{padding:12px}</style><div id="status" role="status">正在准备安全页面…</div><script>
+'use strict';
+(()=>{
+let frame=null,ready=false,request=null,timer=null,deadline=null;
+const status=document.querySelector('#status');
+const send=(value)=>parent.postMessage(value,'*');
+const size=height=>send({jsonrpc:'2.0',method:'ui/notifications/size-changed',params:{width:440,height}});
+function stop(text){if(frame)frame.remove();frame=null;clearTimeout(timer);status.hidden=false;status.textContent=text;size(64);}
+addEventListener('message',event=>{
+ const value=event.data;
+ if(frame&&event.source===frame.contentWindow&&event.origin==='null'){
+  if(value?.type==='vault-lifecycle-complete'&&['ready','valid'].includes(value.status)){
+   stop(value.status==='ready'?'初始化就绪，请勿在聊天中发送密码。':'验证通过，凭据已保存。');
+  }
+  return;
+ }
+ if(event.source!==parent||value?.jsonrpc!=='2.0')return;
+ if(value.id==='init'){
+  if(value.result?.protocolVersion!=='2026-01-26'){stop('宿主不支持此安全页面。');return;}
+  ready=true;send({jsonrpc:'2.0',method:'ui/notifications/initialized',params:{}});size(64);
+ }else if(ready&&value.method==='ui/notifications/tool-result'){
+  const result=value.params?.structuredContent||{};
+  if(result.status!=='pending'||typeof result.request_id!=='string'){stop(result.message||'请按对话引导继续。');return;}
+  if(frame)return;
+  request=result.request_id;
+  send({jsonrpc:'2.0',id:'frame',method:'tools/call',params:{name:'vault_lifecycle_frame',arguments:{request_id:request}}});
+  deadline=setTimeout(()=>stop('安全页面连接超时，请重新发起。'),10000);
+ }else if(value.id==='frame'){
+  clearTimeout(deadline);
+  try{
+   const sc=value.result?.structuredContent;
+   const u=new URL(sc.frame_url);
+   if(sc.request_id!==request||u.protocol!=='http:'||u.hostname!=='127.0.0.1'||u.username||u.password||u.search||u.hash||!/^\/lifecycle\/card\/[A-Za-z0-9_-]{32,}$/.test(u.pathname))throw Error();
+   frame=document.createElement('iframe');frame.title='保险库安全页面';frame.sandbox='allow-scripts';frame.referrerPolicy='no-referrer';frame.src=u.href;
+   document.body.append(frame);status.hidden=true;size(540);timer=setTimeout(()=>stop('本次页面已过期，请重新发起。'),300000);
+  }catch{stop('无法连接安全页面，请检查本地服务。');}
+ }else if(value.method==='ui/notifications/tool-cancelled')stop('本次操作已取消。');
+ else if(value.method==='ui/resource-teardown'){
+  clearTimeout(deadline);stop('页面已关闭。');if(value.id!==undefined)send({jsonrpc:'2.0',id:value.id,result:{}});
+ }
+});
+send({jsonrpc:'2.0',id:'init',method:'ui/initialize',params:{protocolVersion:'2026-01-26',appInfo:{name:'vault-lifecycle',version:'0.3.0'},appCapabilities:{availableDisplayModes:['inline']}}});
+})();
+</script></html>

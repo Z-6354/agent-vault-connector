@@ -69,6 +69,14 @@ export const servicesMetadata = Object.freeze([
   { service_id: 'external-reference', origin: '', credential_types: ['external_reference'], operations: [], synthetic: false },
 ]);
 
+// Capability whitelist for storage, independent of executable service registration.
+// The marker is an identity for local storage; it is never a dispatch destination.
+export const STORAGE_ONLY_POLICY = Object.freeze({
+  origin: 'https://storage-only.vault.local',
+  credentialType: 'password',
+  grantedOperations: Object.freeze([] as string[]),
+});
+
 export function validateSavePayload(input: unknown): SavePayload {
   const parsed = savePayloadSchema.safeParse(input);
   if (!parsed.success) throw new Error('invalid_draft');
@@ -78,8 +86,15 @@ export function validateSavePayload(input: unknown): SavePayload {
     if (value.service_id !== 'external-reference' || origin.protocol !== 'https:' || origin.origin !== value.origin || origin.username || origin.password || value.secret !== '' || value.granted_operations.length) throw new Error('invalid_external_reference');
     return value;
   }
+  if (value.credential_type === STORAGE_ONLY_POLICY.credentialType
+      && value.origin === STORAGE_ONLY_POLICY.origin
+      && value.service_id.trim().length > 0
+      && value.granted_operations.length === 0 && value.secret) {
+    return value;
+  }
   const service = servicesMetadata.find(item => item.service_id === value.service_id);
-  if (!service || value.origin !== service.origin || !service.credential_types.includes(value.credential_type) || !value.secret || value.granted_operations.some(id => !service.operations.includes(id))) throw new Error('unregistered_service_or_scope');
+  if (!service) throw new Error('unregistered_service_or_scope');
+  if (value.origin !== service.origin || !service.credential_types.includes(value.credential_type) || !value.secret || value.granted_operations.some(id => !service.operations.includes(id))) throw new Error('unregistered_service_or_scope');
   if (value.credential_type === 'api_key' && !/^[\x21-\x7e]{1,16384}$/.test(value.secret)) throw new Error('invalid_api_token');
   if (service.synthetic && value.credential_type === 'api_key' && !tokenSchema.safeParse(value.secret).success) throw new Error('synthetic_token_required');
   if (value.credential_type === 'oauth') {
