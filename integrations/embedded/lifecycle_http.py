@@ -10,6 +10,7 @@ import json
 import os
 from pathlib import Path
 import secrets
+import sqlite3
 import threading
 import time
 import urllib.parse
@@ -181,6 +182,10 @@ def make_server(controller, token, port=0):
                 return self.send(400, {'status': 'error', 'message': str(error)})
             except (ValueError, TypeError):
                 return self.send(400, {'status': 'error', 'message': 'invalid_body'})
+            except (sqlite3.DatabaseError, OSError):
+                # Locked/corrupt storage or failed session-file persistence must not
+                # leak filesystem paths or arbitrary exception text into the card.
+                return self.send(503, {'status': 'error', 'message': 'storage_unavailable'})
 
         def do_GET(self): self.route()
         def do_POST(self): self.route(True)

@@ -35,7 +35,7 @@ function notice(text,kind=''){ $('notice').textContent=text;$('notice').classNam
 function setBusy(value){busy=value;$('card').setAttribute('aria-busy',String(value));for(const input of document.querySelectorAll('input'))input.disabled=value||done;$('submit').disabled=value||done;$('submit').textContent=value?'正在处理…':done?'已完成':context?labels[context.mode]:'重新加载';}
 async function request(suffix,body){
  const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),20000);
- try{const response=await fetch(endpoint+suffix,{method:body===undefined?'GET':'POST',mode:'cors',credentials:'omit',cache:'no-store',referrerPolicy:'no-referrer',headers:body===undefined?{}:{'Content-Type':'text/plain'},body,signal:controller.signal});return {ok:response.ok,status:response.status,data:response.ok?await response.json():null};}finally{clearTimeout(timer);}
+ try{const response=await fetch(endpoint+suffix,{method:body===undefined?'GET':'POST',mode:'cors',credentials:'omit',cache:'no-store',referrerPolicy:'no-referrer',headers:body===undefined?{}:{'Content-Type':'text/plain'},body,signal:controller.signal});return {ok:response.ok,status:response.status,data:await response.json()};}finally{clearTimeout(timer);}
 }
 function httpError(status){
  if(status===401||status===403)return '本次操作未获授权或已失效，请重新打开卡片。';
@@ -44,6 +44,10 @@ function httpError(status){
  if(status===504||status===408)return '服务响应超时，操作结果尚未确认，请检查连接及记录后重试。';
  return '服务暂时无法处理请求，操作结果尚未确认，请检查服务及记录后重试。';
 }
+function safeError(response){
+ const messages={invalid_login:'账号或主密码不正确，请重新输入。',invalid_passphrase:'主密码需为 8 至 1024 个字符。',passphrase_mismatch:'两次主密码不一致，请重新输入。',database_exists:'数据库已存在，请重新发起登录。',legacy_database_requires_migration:'此数据库需要迁移，请保留原数据并联系管理员。',stale_card:'账户或数据库已切换，请重新打开卡片。',expired_card:'本次卡片已过期，请重新发起。',invalid_account:'请填写有效账号（最多 80 个字符）。',remote_login_failed:'云端认证未成功，请检查账号、主密码和服务状态。',cloud_create_requires_provisioning:'云端尚未授权建库，请联系服务器管理员。'};
+ return Object.hasOwn(messages,response.data?.message)?messages[response.data.message]:httpError(response.status);
+}
 async function load(){
  if(busy)return;setBusy(true);notice('正在读取操作信息…','busy');
  try{
@@ -51,7 +55,7 @@ async function load(){
   if(!/^https?:$/.test(url.protocol)||!/^\/lifecycle\/card\/[A-Za-z0-9_-]+\/?$/.test(url.pathname))throw Error('address');
   endpoint=url.origin+url.pathname.replace(/\/$/,'');
   const response=await request('/context');
-  if(!response.ok){notice(httpError(response.status),'error');return;}
+  if(!response.ok){notice(safeError(response),'error');return;}
   const data=response.data;
   if(!data||!Object.hasOwn(labels,data.mode)||!['local','cloud'].includes(data.target)||['name','account','service'].some(key=>typeof data[key]!=='string'))throw Error('context');
   context={mode:data.mode,target:data.target};
@@ -74,13 +78,13 @@ async function submit(){
  clearSecrets();
  try{
   const response=await request('/submit',body);body='';
-  if(!response.ok){notice(httpError(response.status),'error');return;}
+  if(!response.ok){notice(safeError(response),'error');return;}
   const result=response.data;
   const expected=context.mode==='credential'?'valid':'ready';
-  if(result?.status===expected){done=true;notice(context.mode==='credential'?'凭据已保存，验证通过。':context.mode==='create'?'密码库已创建，可以继续保存凭据。':'登录成功，可以继续使用密码库。','success');}
+  if(result?.status===expected){done=true;notice(context.mode==='credential'?'凭据已保存，验证通过。':context.mode==='create'?'密码库已创建，请告诉 agent 需要存入什么类型密码，勿在聊天中发送明文。':'登录成功，请勿在聊天中发送密码。','success');parent.postMessage({type:'vault-lifecycle-complete',status:expected},'*');}
   else if(result?.status==='rejected')notice(context.mode==='credential'?'凭据验证被拒绝，请核对账号和密码或密钥后重新输入。':'账号或主密码未通过验证，请核对后重新输入。','error');
-  else if(result?.status==='validation_unavailable')notice('验证服务暂时不可用，凭据有效性及保存结果尚未确认，请检查记录后重试。','error');
-  else if(result?.status==='validation_unsupported')notice('此服务暂不支持凭据验证，有效性及保存结果尚未确认。','error');
+  else if(result?.status==='validation_unavailable')notice('已加密保存，验证服务暂时不可用；记录保持待验证状态，请稍后重新验证。','error');
+  else if(result?.status==='validation_unsupported')notice('已加密保存，但此服务暂不支持凭据验证；记录保持待验证状态。','error');
   else notice('操作结果未能确认，请检查服务状态及记录后重试。','error');
  }catch{notice('连接中断或响应超时，操作结果尚未确认，请检查连接及记录后重试。','error');}
  finally{body='';clearSecrets();setBusy(false);}
@@ -88,6 +92,7 @@ async function submit(){
 $('submit').addEventListener('click',submit);
 $('fields').addEventListener('keydown',event=>{if(event.key==='Enter'&&!event.isComposing){event.preventDefault();void submit();}});
 window.addEventListener('pagehide',clearSecrets);
+new ResizeObserver(()=>parent.postMessage({type:'vault-lifecycle-resize',height:Math.ceil($('card').getBoundingClientRect().height)},'*')).observe($('card'));
 void load();
 })();
 </script>

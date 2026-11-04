@@ -54,6 +54,18 @@ class LifecycleTests(unittest.TestCase):
             self.engine.create('owner', PASSWORD, PASSWORD)
         self.assertFalse(self.db.exists())
 
+    def test_non_boolean_consent_does_not_authorize_creation(self):
+        with self.assertRaises(LifecycleError):
+            self.engine.guide(target='local', consent='false')
+        with self.assertRaises(LifecycleError):
+            self.engine.create('owner', PASSWORD, PASSWORD, consent='false')
+        self.assertFalse(self.db.exists())
+
+    def test_unicode_account_authenticates_after_restart(self):
+        self.engine.create('测试账户', PASSWORD, PASSWORD, consent=True)
+        restarted = LifecycleEngine(self.db, self.session)
+        self.assertEqual(restarted.login('测试账户', PASSWORD)['status'], 'ready')
+
     def test_create_requires_matching_passwords(self):
         with self.assertRaises(LifecycleError):
             self.engine.create('owner', PASSWORD, PASSWORD + 'x', consent=True)

@@ -97,7 +97,21 @@ class SessionFile:
             if temp.exists(): temp.unlink()
 
 
-def remote_request(origin, path, body=None, token=None):
+class RemoteClient:
+    """Creation bootstrap comes from native protected config, never tool arguments."""
+    def __init__(self, targets_path, *, tls_context=None):
+        self.targets = SessionFile(targets_path)
+        self.tls_context = tls_context
+
+    def __call__(self, origin, path, body=None, token=None):
+        if path == '/lifecycle/create':
+            targets = self.targets.load() or {}
+            token = targets.get(origin)
+            if not token: raise LifecycleError('cloud_create_requires_provisioning')
+        return remote_request(origin, path, body, token, tls_context=self.tls_context)
+
+
+def remote_request(origin, path, body=None, token=None, *, tls_context=None):
     """HTTPS only, no redirects, no implicit proxies, no upstream error bodies."""
     parsed = urllib.parse.urlsplit(origin)
     if (parsed.scheme != 'https' or not parsed.hostname or parsed.username or parsed.password
@@ -107,7 +121,9 @@ def remote_request(origin, path, body=None, token=None):
     if token: headers['Authorization'] = 'Bearer ' + token
     req = urllib.request.Request(origin.rstrip('/') + path,
         data=None if body is None else json.dumps(body).encode(), headers=headers)
-    opener = urllib.request.build_opener(urllib.request.ProxyHandler({}), NoRedirect())
+    handlers = [urllib.request.ProxyHandler({}), NoRedirect()]
+    if tls_context is not None: handlers.append(urllib.request.HTTPSHandler(context=tls_context))
+    opener = urllib.request.build_opener(*handlers)
     try:
         with opener.open(req, timeout=5) as response:
             raw = response.read(65537)
@@ -125,7 +141,7 @@ class LifecycleEngine:
         self.db = Path(db_path or Path.home() / '.hermes/vault/vault.db')
         self.sessions = SessionFile(session_path or Path.home() / '.hermes/vault_client.json')
         self.verify = verifier or probe_and_verify_credential
-        self.remote = remote or remote_request
+        self.remote = remote or RemoteClient(self.sessions.path.with_name('vault_targets.json'))
         self.lock = threading.RLock()
         self.generation = 0
 
@@ -308,21 +324,37 @@ class LifecycleEngine:
             self.generation += 1
         return {'status': 'needs_login'}
 
-    def save_and_verify(self, service, account, secret, *, generation=None):
+    def session_for_token(self, token):
+        if not isinstance(token, str) or len(token) < 32 or not self.db.exists():
+            raise LifecycleError('session_expired')
+        lookup = hashlib.sha256(b'lookup:' + token.encode()).hexdigest()
+        with self.connection() as con:
+            row = con.execute('SELECT account FROM lifecycle_sessions WHERE token_hash=?', (lookup,)).fetchone()
+        if not row: raise LifecycleError('session_expired')
+        session = {'target': 'local', 'account': row[0], 'token': token}
+        self.local_key(session)
+        return session
+
+    def save_and_verify(self, service, account, secret, *, generation=None, authenticated_session=None):
         if (not isinstance(service, str) or not service.strip() or len(service) > 100
                 or not isinstance(account, str) or not account.strip() or len(account) > 80
                 or not isinstance(secret, str) or not secret or len(secret) > 65536):
             raise LifecycleError('invalid_credential')
         with self.lock:
             if generation is not None and generation != self.generation: raise LifecycleError('stale_card')
-            session = self.sessions.load()
+            session = authenticated_session if authenticated_session is not None else self.sessions.load()
             if not session: raise LifecycleError('login_required')
             if session['target'] == 'cloud':
                 code, reply = self.remote(session['origin'], '/lifecycle/credentials',
                     {'service': service, 'account': account, 'secret': secret}, token=session['token'])
                 if code != 200: raise LifecycleError('remote_save_failed')
-                safe = {k: reply[k] for k in ('status', 'message') if k in reply}
-                if reply.get('status') == 'valid': safe['ref'] = self._ref(service, account)
+                state = reply.get('status')
+                messages = {'valid': '凭据验证成功，已安全保存。', 'rejected': '服务拒绝了凭据，已清理本次记录，请重新输入。',
+                    'validation_unavailable': '云端暂时无法验证，记录保持待验证状态。',
+                    'validation_unsupported': '已加密保存，尚不支持该服务的自动验证。'}
+                if state not in messages: raise LifecycleError('invalid_remote_response')
+                safe = {'status': state, 'message': messages[state]}
+                if state == 'valid': safe['ref'] = self._ref(service, account)
                 return safe
             key = self.local_key(session)
             cid = str(uuid.uuid4())

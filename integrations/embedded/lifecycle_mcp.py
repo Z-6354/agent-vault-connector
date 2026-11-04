@@ -15,6 +15,7 @@ class LifecycleGateway(Gateway):
     def __init__(self, filename):
         # Reuse the tested gateway origin validation without writing a plaintext token file.
         config = SessionFile(filename).load()
+        if not isinstance(config, dict): raise ValueError('invalid_controller')
         from urllib.parse import urlsplit
         origin = urlsplit(config['origin'])
         if (origin.scheme != 'http' or origin.hostname != '127.0.0.1' or not origin.port
@@ -33,7 +34,11 @@ class LifecycleApps:
         self.ui = False
 
     def call(self, message):
+        if not isinstance(message, dict) or message.get('jsonrpc') != '2.0':
+            return {'jsonrpc': '2.0', 'id': None, 'error': {'code': -32600, 'message': 'Invalid request'}}
         identifier = message.get('id')
+        if type(identifier) not in (str, int, type(None)):
+            return {'jsonrpc': '2.0', 'id': None, 'error': {'code': -32600, 'message': 'Invalid request'}}
         if 'id' not in message: return None
         def reply(result): return {'jsonrpc': '2.0', 'id': identifier, 'result': result}
         def error(code, text): return {'jsonrpc': '2.0', 'id': identifier, 'error': {'code': code, 'message': text}}

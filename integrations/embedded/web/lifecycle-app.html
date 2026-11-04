@@ -9,6 +9,7 @@ function stop(text){if(frame)frame.remove();frame=null;clearTimeout(timer);statu
 addEventListener('message',event=>{
  const value=event.data;
  if(frame&&event.source===frame.contentWindow&&event.origin==='null'){
+  if(value?.type==='vault-lifecycle-resize'&&Number.isFinite(value.height)&&value.height>=200&&value.height<=900){frame.style.height=value.height+'px';size(value.height);return;}
   if(value?.type==='vault-lifecycle-complete'&&['ready','valid'].includes(value.status)){
    stop(value.status==='ready'?'初始化就绪，请勿在聊天中发送密码。':'验证通过，凭据已保存。');
   }
